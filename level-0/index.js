@@ -1,5 +1,1 @@
-handler = function () {
-  console.log("this works!");
-  console.error("lulz");
-  return null;
-};
+exports.handler = () => `Hello, I am ${process.env.NAME}`;
