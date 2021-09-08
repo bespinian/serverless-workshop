@@ -1,7 +1,7 @@
 {
-  "name": "level-4",
+  "name": "level-3",
   "version": "1.0.0",
-  "description": "Level 4 of the Serverless Workshop",
+  "description": "Level 3 of the Serverless Workshop",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
