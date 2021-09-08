@@ -47,7 +47,7 @@ Please work through the following steps:
 
 1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
 1. Click on `Create function`
-1. Choose `myFunction-USERNAME` as the function name, replacing `USERNAME` with you user name.
+1. Choose `myFunction-AWSUSER` as the function name, replacing `AWSUSER` with you user name.
 1. Choose `Node.js 14.x` as the runtime
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges.
 1. Click on `Create function`
@@ -57,6 +57,112 @@ Please work through the following steps:
 1. Press the `Test` button and create a test event called `test`
 1. Press the `Test` button again to run the test
 1. Observe the test output.
+
+### Already done? Try some of the bonus steps!
+
+<details>
+  <summary>Try it with the AWS CLI!</summary>
+
+1. Set the AWSUSER environment variable.
+
+```
+export AWSUSER=<your AWS username>
+```
+
+2. Create an execution role which will allow Lambda functions to access AWS resources:
+
+```
+aws iam create-role --role-name lambda-ex-"$AWSUSER" --assume-role-policy-document file://level-0/advanced/cli/trust-policy.json
+```
+
+3. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
+
+```
+aws iam attach-role-policy --role-name lambda-ex-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+```
+
+4. Create a deployment package for your function:
+
+```
+zip -j function.zip level-0/index.js
+```
+
+5. Create the function:
+
+```
+export ACCOUNT_ID=<your account ID>
+
+aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file file://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-ex
+```
+
+6. Set the `NAME` environment variable to your user name:
+
+```
+aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --environment "Variables={NAME='$AWSUSER'}"
+```
+
+7. Invoke the function:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail
+```
+
+8. Invoke the function and decode the logs:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
+9. Clean up
+
+```
+aws lambda delete-function --function-name my-function-cli-"$AWSUSER"
+
+aws iam delete-role --role-name lambda-ex-"$AWSUSER"
+```
+
+</details>
+
+<details>
+  <summary>Still bored? Then try it with Terraform!</summary>
+
+1. Navigate to the Terraform module
+
+```
+cd level-0/advanced/terraform
+```
+
+2. Initialize the Terraform module
+
+```
+terraform init
+```
+
+3. Set your AWS user name as a environment variable for Terraform
+
+```
+export TF_VAR_aws_user=<your AWS user name>
+```
+
+4. Apply the Terraform module
+
+```
+terraform apply
+```
+
+5. Invoke the function
+
+```
+aws lambda invoke --function-name=$(terraform output -raw function_name) response.json
+```
+
+6. Clean up
+
+```
+terraform destroy
+```
+
+</details>
 
 ## Level 1 - Loggin' it!
 
