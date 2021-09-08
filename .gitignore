@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+function.zip
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+.terraform
