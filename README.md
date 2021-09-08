@@ -45,7 +45,7 @@ A workshop on Serverless
 
 ### Steps
 
-1.
+1. Paste code
 
 ## Level 4 - No cold starts!
 

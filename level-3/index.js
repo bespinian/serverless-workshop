@@ -3,9 +3,9 @@ const AWS = AWSXRay.captureAWS(require("aws-sdk"));
 
 const TIMEOUT_GRACE_PERIOD_IN_MILLIS = 500;
 
-const ddb = new AWS.DynamoDB();
-
 exports.handler = async (event, context) => {
+  const ddb = new AWS.DynamoDB();
+
   AWS.config.update({
     httpOptions: {
       timeout:
