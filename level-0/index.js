@@ -1,1 +1,1 @@
-exports.handler = () => `Hello, I am ${process.env.NAME}`;
+exports.handler = async () => `Hello, I am ${process.env.NAME}`;
