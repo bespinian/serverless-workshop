@@ -39,17 +39,24 @@ Some optional extra topics also require Terraform, which you need to install on 
 
 ## Level 0 - This is easy!
 
-- Func configured via env variables
-- Play with scaling
-- Figure out everything is deny by default
+In this level you will learn how to create a first simple function in AWS Lambda. You will also learn how to pass configuration parameters into a function using environment variables. Furthermore, you will see that AWS has a very strict, deny-by-default authorization scheme.
 
 ### Steps
 
-1. Go to AWS Lambda GUI
-1. Create function
-1. Paste code
-1. Set environment variable `NAME`
-1. Test function
+Please work through the following steps:
+
+1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
+1. Click on `Create function`
+1. Choose `myFunction-USERNAME` as the function name, replacing `USERNAME` with you user name.
+1. Choose `Node.js 14.x` as the runtime
+1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges.
+1. Click on `Create function`
+1. Copy the code from `./level-0/index.js` and paste it into the code editor field
+1. Press the `Deploy` button
+1. Set environment variable `NAME` in the `Configuration` tab under `Environment variables`
+1. Press the `Test` button and create a test event called `test`
+1. Press the `Test` button again to run the test
+1. Observe the test output.
 
 ## Level 1 - Loggin' it!
 
