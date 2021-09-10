@@ -51,7 +51,7 @@ Please work through the following steps:
 1. Choose `Node.js 14.x` as the runtime
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges.
 1. Click on `Create function`
-1. Copy the code from `./level-0/function/index.js` and paste it into the code editor field
+1. Copy the code from [](./level-0/function/index.js) and paste it into the code editor field
 1. Press the `Deploy` button
 1. Set environment variable `NAME` in the `Configuration` tab under `Environment variables`
 1. Press the `Test` button and create a test event called `test`
@@ -173,15 +173,15 @@ terraform destroy
 ### Steps
 
 1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
-1. Click on `Create function`
-1. Choose `myFunctionLogged-AWSUSER` as the function name, replacing `AWSUSER` with you user name.
-1. Choose `Node.js 14.x` as the runtime
-1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges for writing logs to CloudWatch
-1. Click on `Create function`
-1. Copy the code from `./level-1/index.js` and paste it into the code editor field
-1. Press the `Deploy` button
-1. Press the `Test` button and create a test event called `bob`
-1. Paste the following JSON object to the editor field
+2. Click on `Create function`
+3. Choose `myFunctionLogged-AWSUSER` as the function name, replacing `AWSUSER` with you user name.
+4. Choose `Node.js 14.x` as the runtime
+5. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges for writing logs to CloudWatch
+6. Click on `Create function`
+7. Copy the code from [](./level-1/index.js) and paste it into the code editor field
+8. Press the `Deploy` button
+9. Press the `Test` button and create a test event called `bob`
+10. Paste the following JSON object to the editor field
 
 ```
 {
@@ -189,11 +189,11 @@ terraform destroy
 }
 ```
 
-1. Press the `Test` button again to run the test
-1. Navigate to the tab `Monitor`
-1. Click `View logs in CloudWatch`
-1. Look for a recent log stream and open it
-1. Check for lines looking like this
+11. Press the `Test` button again to run the test
+12. Navigate to the tab `Monitor`
+13. Click `View logs in CloudWatch`
+14. Look for a recent log stream and open it
+15. Check for lines looking like this
 
 ```
 2021-09-10T12:26:33.779Z c70ee5e7-4295-4408-a713-9f3ceaaa53e3 INFO Bob invoked me
@@ -201,8 +201,8 @@ terraform destroy
 2021-09-10T12:26:33.779Z c70ee5e7-4295-4408-a713-9f3ceaaa53e3 ERROR Oh noes!
 ```
 
-1. Navigate to the tab `Configuration` and click on the category `Permissions`.
-1. Observe the logging permissions which were assigned to your function automatically.
+16. Navigate to the tab `Configuration` and click on the category `Permissions`.
+17. Observe the logging permissions which were assigned to your function automatically.
 
 ## Level 2 - Tracin' it!
 
