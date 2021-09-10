@@ -51,7 +51,7 @@ Please work through the following steps:
 1. Choose `Node.js 14.x` as the runtime
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges.
 1. Click on `Create function`
-1. Copy the code from `./level-0/index.js` and paste it into the code editor field
+1. Copy the code from `./level-0/function/index.js` and paste it into the code editor field
 1. Press the `Deploy` button
 1. Set environment variable `NAME` in the `Configuration` tab under `Environment variables`
 1. Press the `Test` button and create a test event called `test`
@@ -172,10 +172,37 @@ terraform destroy
 
 ### Steps
 
-1. Paste code
-1. Verify permissions
-1. Test function
-1. Check logs in CloudWatch
+1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
+1. Click on `Create function`
+1. Choose `myFunctionLogged-AWSUSER` as the function name, replacing `AWSUSER` with you user name.
+1. Choose `Node.js 14.x` as the runtime
+1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges for writing logs to CloudWatch
+1. Click on `Create function`
+1. Copy the code from `./level-1/index.js` and paste it into the code editor field
+1. Press the `Deploy` button
+1. Press the `Test` button and create a test event called `bob`
+1. Paste the following JSON object to the editor field
+
+```
+{
+  "name": "Bob"
+}
+```
+
+1. Press the `Test` button again to run the test
+1. Navigate to the tab `Monitor`
+1. Click `View logs in CloudWatch`
+1. Look for a recent log stream and open it
+1. Check for lines looking like this
+
+```
+2021-09-10T12:26:33.779Z c70ee5e7-4295-4408-a713-9f3ceaaa53e3 INFO Bob invoked me
+
+2021-09-10T12:26:33.779Z c70ee5e7-4295-4408-a713-9f3ceaaa53e3 ERROR Oh noes!
+```
+
+1. Navigate to the tab `Configuration` and click on the category `Permissions`.
+1. Observe the logging permissions which were assigned to your function automatically.
 
 ## Level 2 - Tracin' it!
 
