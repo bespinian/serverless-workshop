@@ -1,6 +1,6 @@
-# serverless-workshop
+# Level Up Your Serverless Game
 
-A workshop on Serverless
+This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the AWS Web Console. However, if you prefer working with the AWS CLI or with Terraform you may switch to one of these technologies at any stage in the course. If you stay on the basic track, there is nothing to install on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
 
 ## Preparation
 
