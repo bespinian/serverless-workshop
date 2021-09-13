@@ -72,7 +72,7 @@ export AWSUSER=<your AWS username>
 2. Create an execution role which will allow Lambda functions to access AWS resources:
 
 ```
-aws iam create-role --role-name lambda-ex-"$AWSUSER" --assume-role-policy-document file://level-0/advanced/cli/trust-policy.json
+aws iam create-role --role-name lambda-ex --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
 ```
 
 3. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
@@ -203,6 +203,71 @@ terraform destroy
 
 16. Navigate to the tab `Configuration` and click on the category `Permissions`.
 17. Observe the logging permissions which were assigned to your function automatically.
+
+### Already done? Try some of the bonus steps!
+
+<details>
+  <summary>Try it with the AWS CLI!</summary>
+
+1. Set the AWSUSER environment variable.
+
+```
+export AWSUSER=<your AWS username>
+```
+
+2. Create an execution role which will allow Lambda functions to access AWS resources:
+
+```
+aws iam create-role --role-name lambda-ex --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
+```
+
+3. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
+
+```
+aws iam attach-role-policy --role-name lambda-ex-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+```
+
+4. Create a deployment package for your function:
+
+```
+zip -j function.zip level-1/function/index.js
+```
+
+5. Create the function:
+
+```
+export ACCOUNT_ID=<your account ID>
+
+aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file file://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-ex
+```
+
+6. Set the `NAME` environment variable to your user name:
+
+```
+aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --environment "Variables={NAME='$AWSUSER'}"
+```
+
+7. Invoke the function:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail
+```
+
+8. Invoke the function and decode the logs:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
+9. Clean up
+
+```
+aws lambda delete-function --function-name my-function-cli-"$AWSUSER"
+
+aws iam delete-role --role-name lambda-ex-"$AWSUSER"
+```
+
+</details>
 
 ## Level 2 - Tracin' it!
 
