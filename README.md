@@ -253,6 +253,61 @@ aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format
 aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER"
 ```
 
+8. Inspect the log events of the log stream:
+
+```
+aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" --log-stream-name=<name of latest log stream>
+```
+
+9. Clean up
+
+```
+aws lambda delete-function --function-name my-function-cli-"$AWSUSER"
+
+aws iam delete-role --role-name lambda-ex-"$AWSUSER"
+```
+
+</details>
+
+<details>
+  <summary>Still bored? Then try it with Terraform!</summary>
+
+1. Navigate to the Terraform module
+
+```
+cd level-1/advanced/terraform
+```
+
+2. Initialize the Terraform module
+
+```
+terraform init
+```
+
+3. Set your AWS user name as a environment variable for Terraform
+
+```
+export TF_VAR_aws_user=<your AWS user name>
+```
+
+4. Apply the Terraform module
+
+```
+terraform apply
+```
+
+5. Invoke the function with a test event:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' out --log-type Tail
+```
+
+6. Find the latest log stream for your function in CloudWatch:
+
+```
+aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER"
+```
+
 7. Inspect the log events of the log stream:
 
 ```
@@ -262,12 +317,8 @@ aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" 
 8. Clean up
 
 ```
-aws lambda delete-function --function-name my-function-cli-"$AWSUSER"
-
-aws iam delete-role --role-name lambda-ex-"$AWSUSER"
+terraform destroy
 ```
-
-</details>
 
 ## Level 2 - Tracin' it!
 
