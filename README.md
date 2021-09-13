@@ -30,7 +30,7 @@ Then you need to configure your CLI with access key ID and the secret access key
 
 6. Type `aws configure` in your terminal
 7. Enter your access key ID and the secret access key at the prompts
-8. Supply a default region name and a default output format
+8. Choose `eu-central-1` as the default region name and a default output format (e.g. `eu-central-1`)
 9. Test the connection by typing `aws sts get-caller-identity` in your terminal. You should see some basic information about your user.
 
 ### Optional: install Terraform
@@ -47,7 +47,7 @@ Please work through the following steps:
 
 1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
 1. Click on `Create function`
-1. Choose `myFunction-AWSUSER` as the function name, replacing `AWSUSER` with you user name.
+1. Choose `my-function-AWSUSER` as the function name, replacing `AWSUSER` with you user name.
 1. Choose `Node.js 14.x` as the runtime
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges.
 1. Click on `Create function`
