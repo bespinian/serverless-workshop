@@ -72,7 +72,7 @@ export AWSUSER=<your AWS username>
 2. Create an execution role which will allow Lambda functions to access AWS resources:
 
 ```
-aws iam create-role --role-name lambda-ex --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
+aws iam create-role --role-name lambda-ex-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
 ```
 
 3. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
@@ -92,7 +92,7 @@ zip -j function.zip level-0/index.js
 ```
 export ACCOUNT_ID=<your account ID>
 
-aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file file://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-ex
+aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-ex-"$AWSUSER"
 ```
 
 6. Set the `NAME` environment variable to your user name:
@@ -218,7 +218,7 @@ export AWSUSER=<your AWS username>
 2. Create an execution role which will allow Lambda functions to access AWS resources:
 
 ```
-aws iam create-role --role-name lambda-ex --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
+aws iam create-role --role-name lambda-ex-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
 ```
 
 3. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
@@ -238,28 +238,22 @@ zip -j function.zip level-1/function/index.js
 ```
 export ACCOUNT_ID=<your account ID>
 
-aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file file://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-ex
+aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-ex-"$AWSUSER"
 ```
 
-6. Set the `NAME` environment variable to your user name:
+6. Invoke the function with a test event:
 
 ```
-aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --environment "Variables={NAME='$AWSUSER'}"
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' out --log-type Tail
 ```
 
-7. Invoke the function:
+7. Inspect the logs in CloudWatch:
 
 ```
-aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail
-```
-
-8. Invoke the function and decode the logs:
 
 ```
-aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail --query 'LogResult' --output text |  base64 -d
-```
 
-9. Clean up
+8. Clean up
 
 ```
 aws lambda delete-function --function-name my-function-cli-"$AWSUSER"
