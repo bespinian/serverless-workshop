@@ -4,7 +4,7 @@ This workshop consists of multiple levels of increasing difficulty. The basic tr
 
 ## Preparation
 
-Before the course, please take care of the following tasks.
+At the start of the course, please take care of the following tasks.
 
 ### Test your AWS login
 
