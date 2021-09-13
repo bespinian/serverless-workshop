@@ -247,10 +247,16 @@ aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file
 aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' out --log-type Tail
 ```
 
-7. Inspect the logs in CloudWatch:
+7. Find the latest log stream for your function in CloudWatch:
 
 ```
+aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER"
+```
 
+7. Inspect the log events of the log stream:
+
+```
+aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" --log-stream-name=<name of latest log stream>
 ```
 
 8. Clean up
