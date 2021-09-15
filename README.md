@@ -1,14 +1,14 @@
 # Level Up Your Serverless Game
 
-This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the AWS Web Console. However, if you prefer working with the AWS CLI or with Terraform you may switch to one of these technologies at any stage in the course. If you stay on the basic track, there is nothing to install on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
+This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, if you prefer working with the [AWS CLI](https://aws.amazon.com/cli/) or with [Terraform](https://www.terraform.io/) you may switch to one of these technologies at any stage in the course. If you stay on the basic track, there is nothing to install on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
 
 ## Preparation
 
-At the start of the course, please take care of the following tasks.
+At the start of the course, please take care of the following tasks:
 
 ### Test your AWS login
 
-You have received an AWS Account ID, a user name and a password from the trainers. Please navigate to `https://aws.amazon.com/`, click the button `Sign In to the Console` and enter your credentials. You should be able to log in to the console. From there you should be able to reach the service `Lambda`.
+You have received an AWS Account ID, an IAM user name and a password from the trainers. Please navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
 
 ### Optional: install the AWS CLI
 
@@ -24,13 +24,12 @@ In order to authenticate your CLI you need to first create an access key by perf
 2. Click on your name in the top right of the screen
 3. Click `My Security Credentials` in the dropdown
 4. Click `Create Access Key` under `Access keys for CLI, SDK, & API access`
-5. Download the access key ID and the secret access key as a CSV file or copy them
 
 Then you need to configure your CLI with access key ID and the secret access key
 
 6. Type `aws configure` in your terminal
-7. Enter your access key ID and the secret access key at the prompts
-8. Choose `eu-central-1` as the default region name and a default output format (e.g. `eu-central-1`)
+7. Copy your access key ID and the secret access key from the web console and paste them at the prompts
+8. Choose `eu-central-1` as the default region name
 9. Test the connection by typing `aws sts get-caller-identity` in your terminal. You should see some basic information about your user.
 
 ### Optional: install Terraform
@@ -39,24 +38,24 @@ Some optional extra topics also require Terraform, which you need to install on 
 
 ## Level 0 - This is easy!
 
-In this level you will learn how to create a first simple function in AWS Lambda. You will also learn how to pass configuration parameters into a function using environment variables. Furthermore, you will see that AWS has a very strict, deny-by-default authorization scheme.
+In this level you will learn how to create a first simple function in AWS Lambda. You will also learn how to pass configuration parameters into a function using environment variables. Furthermore, you will see that AWS has a very strict, deny-by-default permission scheme.
 
 ### Steps
 
 Please work through the following steps:
 
-1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
+1. Go to the [AWS Lambda GUI](https://console.aws.amazon.com/lambda)
 1. Click on `Create function`
-1. Choose `my-function-AWSUSER` as the function name, replacing `AWSUSER` with you user name.
+1. Choose `my-function-AWSUSER` as the function name, replacing `AWSUSER` with you user name
 1. Choose `Node.js 14.x` as the runtime
-1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges.
-1. Click on `Create function`
+1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges
+1. Click `Create function`
 1. Copy the code from [./level-0/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-0/function/index.js) and paste it into the code editor field
 1. Press the `Deploy` button
 1. Set environment variable `NAME` in the `Configuration` tab under `Environment variables`
 1. Press the `Test` button and create a test event called `test`
 1. Press the `Test` button again to run the test
-1. Observe the test output.
+1. Observe the test output
 
 ### Already done? Try some of the bonus steps!
 
@@ -72,13 +71,13 @@ export AWSUSER=<your AWS username>
 2. Create an execution role which will allow Lambda functions to access AWS resources:
 
 ```
-aws iam create-role --role-name lambda-ex-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
+aws iam create-role --role-name lambda-exec-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
 ```
 
 3. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
 
 ```
-aws iam attach-role-policy --role-name lambda-ex-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+aws iam attach-role-policy --role-name lambda-exec-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 ```
 
 4. Create a deployment package for your function:
@@ -89,10 +88,12 @@ zip -j function.zip level-0/index.js
 
 5. Create the function:
 
+Find out your Account ID by clicking your username in the top right corner.
+
 ```
 export ACCOUNT_ID=<your account ID>
 
-aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-ex-"$AWSUSER"
+aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-exec-"$AWSUSER"
 ```
 
 6. Set the `NAME` environment variable to your user name:
@@ -118,7 +119,7 @@ aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail
 ```
 aws lambda delete-function --function-name my-function-cli-"$AWSUSER"
 
-aws iam delete-role --role-name lambda-ex-"$AWSUSER"
+aws iam delete-role --role-name lambda-exec-"$AWSUSER"
 ```
 
 </details>
@@ -165,6 +166,8 @@ terraform destroy
 </details>
 
 ## Level 1 - Loggin' it!
+
+To reach level 1, you'll need to learn about the following topics:
 
 - Logging
 - Event parameter
@@ -218,13 +221,13 @@ export AWSUSER=<your AWS username>
 2. Create an execution role which will allow Lambda functions to access AWS resources:
 
 ```
-aws iam create-role --role-name lambda-ex-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
+aws iam create-role --role-name lambda-exec-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
 ```
 
 3. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
 
 ```
-aws iam attach-role-policy --role-name lambda-ex-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+aws iam attach-role-policy --role-name lambda-exec-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 ```
 
 4. Create a deployment package for your function:
@@ -238,7 +241,7 @@ zip -j function.zip level-1/function/index.js
 ```
 export ACCOUNT_ID=<your account ID>
 
-aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-ex-"$AWSUSER"
+aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-exec-"$AWSUSER"
 ```
 
 6. Invoke the function with a test event:
@@ -264,7 +267,7 @@ aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" 
 ```
 aws lambda delete-function --function-name my-function-cli-"$AWSUSER"
 
-aws iam delete-role --role-name lambda-ex-"$AWSUSER"
+aws iam delete-role --role-name lambda-exec-"$AWSUSER"
 ```
 
 </details>

@@ -1,23 +1,22 @@
 {
   "name": "level-4",
-  "version": "1.0.0",
   "description": "Level 4 of the Serverless Workshop",
+  "author": "bespinian",
+  "homepage": "https://github.com/bespinian/serverless-workshop#readme",
+  "license": "Apache-2.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.982.0",
+    "aws-xray-sdk": "^3.3.3"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bespinian/serverless-workshop.git"
   },
-  "author": "bespinian",
-  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/bespinian/serverless-workshop/issues"
-  },
-  "homepage": "https://github.com/bespinian/serverless-workshop#readme",
-  "dependencies": {
-    "aws-sdk": "^2.982.0",
-    "aws-xray-sdk": "^3.3.3"
   }
 }
