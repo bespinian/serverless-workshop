@@ -1,12 +1,9 @@
 variable "aws_user" {
   description = "The AWS user name used to disambiguate resource names"
-
-  type = string
+  type        = string
 }
 
 variable "aws_region" {
-  description = "AWS region for all resources."
-
-  type    = string
-  default = "eu-central-1"
+  description = "AWS region for all resources"
+  default     = "eu-central-1"
 }
