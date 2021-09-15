@@ -83,7 +83,7 @@ aws iam attach-role-policy --role-name lambda-exec-"$AWSUSER" --policy-arn arn:a
 4. Create a deployment package for your function:
 
 ```
-zip -j function.zip level-0/index.js
+zip -j function.zip level-0/function/index.js
 ```
 
 5. Create the function:
@@ -114,53 +114,48 @@ aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail
 aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail --query 'LogResult' --output text |  base64 -d
 ```
 
-9. Clean up
-
-```
-aws lambda delete-function --function-name my-function-cli-"$AWSUSER"
-
-aws iam delete-role --role-name lambda-exec-"$AWSUSER"
-```
-
 </details>
 
 <details>
   <summary>Still bored? Then try it with Terraform!</summary>
 
-1. Navigate to the Terraform module
+1. Copy the Terraform module to a directory of your choice
 
 ```
-cd level-0/advanced/terraform
+export WORKDIR=<your work directory>
+mkdir $WORKDIR
+cp level-0/advanced/terraform/* $WORKDIR
+cp -r level-0/function $WORKDIR
 ```
 
-2. Initialize the Terraform module
+2. Navigate to the Terraform module in your work directory
+
+```
+cd $WORKDIR
+```
+
+3. Initialize the Terraform module
 
 ```
 terraform init
 ```
 
-3. Set your AWS user name as a environment variable for Terraform
+4. Set your AWS user name as a environment variable for Terraform
 
 ```
 export TF_VAR_aws_user=<your AWS user name>
 ```
 
-4. Apply the Terraform module
+5. Apply the Terraform module
 
 ```
 terraform apply
 ```
 
-5. Invoke the function
+6. Invoke the function
 
 ```
 aws lambda invoke --function-name=$(terraform output -raw function_name) response.json
-```
-
-6. Clean up
-
-```
-terraform destroy
 ```
 
 </details>
@@ -176,15 +171,12 @@ To reach level 1, you'll need to learn about the following topics:
 ### Steps
 
 1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
-2. Click on `Create function`
-3. Choose `myFunctionLogged-AWSUSER` as the function name, replacing `AWSUSER` with you user name.
-4. Choose `Node.js 14.x` as the runtime
-5. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges for writing logs to CloudWatch
-6. Click on `Create function`
-7. Copy the code from [./level-1/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-1/index.js) and paste it into the code editor field
-8. Press the `Deploy` button
-9. Press the `Test` button and create a test event called `bob`
-10. Paste the following JSON object to the editor field
+2. Click on `Functions` in the left navigation
+3. Choose the function `my-function-AWSUSER`, which you created in level 0
+4. Copy the code from [./level-1/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-1/function/index.js) and paste it over the existing code in the editor field
+5. Press the `Deploy` button
+6. Press the `Test` button and create a test event called `bob`
+7. Paste the following JSON object to the editor field
 
 ```
 {
@@ -212,25 +204,15 @@ To reach level 1, you'll need to learn about the following topics:
 <details>
   <summary>Try it with the AWS CLI!</summary>
 
-1. Set the AWSUSER environment variable.
+1. Make sure the AWSUSER and ACCOUNT_ID environment variables are still set.
 
 ```
 export AWSUSER=<your AWS username>
+
+export ACCOUNT_ID=<your account ID>
 ```
 
-2. Create an execution role which will allow Lambda functions to access AWS resources:
-
-```
-aws iam create-role --role-name lambda-exec-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
-```
-
-3. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
-
-```
-aws iam attach-role-policy --role-name lambda-exec-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-```
-
-4. Create a deployment package for your function:
+2. Create a deployment package for your new function:
 
 ```
 zip -j function.zip level-1/function/index.js
@@ -239,9 +221,7 @@ zip -j function.zip level-1/function/index.js
 5. Create the function:
 
 ```
-export ACCOUNT_ID=<your account ID>
-
-aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-exec-"$AWSUSER"
+aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
 ```
 
 6. Invoke the function with a test event:
@@ -256,18 +236,10 @@ aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format
 aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER"
 ```
 
-8. Inspect the log events of the log stream:
+8. Inspect the log events of the log stream. You might have to escape some characters in the value passed in `--log-stream-name`
 
 ```
 aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" --log-stream-name=<name of latest log stream>
-```
-
-9. Clean up
-
-```
-aws lambda delete-function --function-name my-function-cli-"$AWSUSER"
-
-aws iam delete-role --role-name lambda-exec-"$AWSUSER"
 ```
 
 </details>
@@ -275,25 +247,20 @@ aws iam delete-role --role-name lambda-exec-"$AWSUSER"
 <details>
   <summary>Still bored? Then try it with Terraform!</summary>
 
-1. Navigate to the Terraform module
+1. Make sure your work directory and user variables are still set
 
 ```
-cd level-1/advanced/terraform
-```
-
-2. Initialize the Terraform module
-
-```
-terraform init
-```
-
-3. Set your AWS user name as a environment variable for Terraform
-
-```
+export WORKDIR=<your work directory>
 export TF_VAR_aws_user=<your AWS user name>
 ```
 
-4. Apply the Terraform module
+2. Navigate to the Terraform module
+
+```
+cp -r level-1/function $WORKDIR
+```
+
+4. Apply the Terraform module again
 
 ```
 terraform apply
@@ -315,12 +282,6 @@ aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWS
 
 ```
 aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" --log-stream-name=<name of latest log stream>
-```
-
-8. Clean up
-
-```
-terraform destroy
 ```
 
 ## Level 2 - Tracin' it!
