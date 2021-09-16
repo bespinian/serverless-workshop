@@ -218,7 +218,7 @@ export ACCOUNT_ID=<your account ID>
 zip -j function.zip level-1/function/index.js
 ```
 
-5. Create the function:
+5. Update the function with the new code:
 
 ```
 aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
@@ -284,6 +284,8 @@ aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWS
 aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" --log-stream-name=<name of latest log stream>
 ```
 
+</details>
+
 ## Level 2 - Tracin' it!
 
 ### Steps
@@ -302,4 +304,86 @@ aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" 
 
 ## Level 4 - No cold starts!
 
+To reach level 4, you will need to reduce the cold start time of your function. You may do this by using a warmer pattern and by moving initialization code outside of your handler.
+
 ### Steps
+
+1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
+2. Click on `Functions` in the left navigation
+3. Choose the function `my-function-AWSUSER`, which you created in level 0
+4. Copy the code from [./level-4/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-4/function/index.js) and paste it over the existing code in the editor field
+5. Press the `Deploy` button
+6. Press the `Test` button and create a test event called `joke`
+7. Paste the following JSON object to the editor field
+
+```
+{
+  "jokeID": "1"
+}
+```
+
+11. Press the `Test` button again to run the test
+12. Observe the test output
+
+### Already done? Try some of the bonus steps!
+
+<details>
+  <summary>Try it with the AWS CLI!</summary>
+
+1. Make sure the AWSUSER and ACCOUNT_ID environment variables are still set.
+
+```
+export AWSUSER=<your AWS username>
+
+export ACCOUNT_ID=<your account ID>
+```
+
+2. Create a deployment package for your new function:
+
+```
+zip -j function.zip level-4/function/index.js
+```
+
+5. Update the function with the new code:
+
+```
+aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
+```
+
+6. Invoke the function with a test event:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' out --log-type Tail
+```
+
+</details>
+
+<details>
+  <summary>Still bored? Then try it with Terraform!</summary>
+
+1. Make sure your work directory and user variables are still set
+
+```
+export WORKDIR=<your work directory>
+export TF_VAR_aws_user=<your AWS user name>
+```
+
+2. Navigate to the Terraform module
+
+```
+cp -r level-4/function $WORKDIR
+```
+
+4. Apply the Terraform module again
+
+```
+terraform apply
+```
+
+5. Invoke the function with a test event:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' out --log-type Tail
+```
+
+</details>
