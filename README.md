@@ -319,25 +319,49 @@ export AWSUSER=<your AWS username>
 export ACCOUNT_ID=<your account ID>
 ```
 
-2. Create a deployment package for your new function:
+2. Attach a policy for XRay access to your role
 
 ```
-zip -j function.zip level-1/function/index.js
+aws iam attach-role-policy --role-name lambda-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
 ```
 
-5. Update the function with the new code:
+3. Create a policy for access to the Jokes table in DynamoDB
+
+```
+aws iam create-policy --policy-name read-jokes-db-table-cli-"$AWSUSER" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/Jokes" }]}'
+```
+
+4. Attach the policy to your role
+
+```
+aws iam attach-role-policy --role-name lambda-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::"$ACCOUNT_ID":policy/read-jokes-db-table-cli-"$AWSUSER"
+```
+
+5. Create a deployment package for your new function:
+
+```
+zip -j function.zip level-2/function/index.js
+```
+
+6. Update the function with the new code:
 
 ```
 aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
 ```
 
-6. Invoke the function with a test event:
+7. Invoke the function with a test event:
 
 ```
-aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
 ```
 
-7. Inspect the traces that have been created during the last 20 minutes:
+8. Switch on XRay tracing for your function
+
+```
+aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --tracing-config "Mode=Active"
+```
+
+9. Inspect the traces that have been created during the last 20 minutes:
 
 ```
 aws xray get-service-graph --start-time $(($(date +"%s") -1200)) --end-time $(date +"%s")
