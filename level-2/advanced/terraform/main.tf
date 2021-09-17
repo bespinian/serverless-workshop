@@ -45,17 +45,17 @@ resource "aws_dynamodb_table" "jokes" {
   }
 }
 
-data "archive_file" "lambda_my_function" {
+data "archive_file" "my_function" {
   type = "zip"
 
-  source_dir  = "${path.module}/../function"
+  source_dir  = "${path.module}/function"
   output_path = "${path.module}/function.zip"
 }
 
 resource "aws_lambda_function" "my_function" {
-  function_name = "my-function-terraform-${var.aws_user}"
+  function_name = "my-function-tf-${var.aws_user}"
 
-  filename = data.archive_file.lambda_my_function.output_path
+  filename = data.archive_file.my_function.output_path
 
   runtime = "nodejs14.x"
   handler = "index.handler"
@@ -63,7 +63,7 @@ resource "aws_lambda_function" "my_function" {
   tracing_config {
     mode = "Active"
   }
-  source_code_hash = data.archive_file.lambda_my_function.output_base64sha256
+  source_code_hash = data.archive_file.my_function.output_base64sha256
 
   role = aws_iam_role.lambda_exec.arn
 }
@@ -75,7 +75,7 @@ resource "aws_cloudwatch_log_group" "my_function" {
 }
 
 resource "aws_iam_role" "lambda_exec" {
-  name = "serverless-lambda-${var.aws_user}"
+  name = "serverless-lambda-tf-${var.aws_user}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -106,7 +106,7 @@ data "aws_iam_policy" "xray_write_access" {
 }
 
 resource "aws_iam_policy" "read_jokes_db_table" {
-  name   = "read-jokes-db-table"
+  name   = "read-jokes-db-table-tf-${var.aws_user}"
   policy = data.aws_iam_policy_document.access_jokes_table.json
 }
 

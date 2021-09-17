@@ -355,10 +355,11 @@ export WORKDIR=<your work directory>
 export TF_VAR_aws_user=<your AWS user name>
 ```
 
-2. Navigate to the Terraform module
+2. Copy the new function code and the updated terraform resources to your work directory
 
 ```
-cp -r level-1/function $WORKDIR
+cp level-2/advanced/terraform/* $WORKDIR
+cp -r level-2/function $WORKDIR
 ```
 
 4. Apply the Terraform module again

@@ -21,44 +21,22 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "random_pet" "lambda_bucket_name" {
-  prefix = "bespinian-serverless-workshop"
-  length = 4
-}
-
-resource "aws_s3_bucket" "lambda_bucket" {
-  bucket = random_pet.lambda_bucket_name.id
-
-  acl           = "private"
-  force_destroy = true
-}
-
-data "archive_file" "lambda_my_function" {
+data "archive_file" "my_function" {
   type = "zip"
 
-  source_dir  = "${path.module}/../../function"
+  source_dir  = "${path.module}/function"
   output_path = "${path.module}/function.zip"
 }
 
-resource "aws_s3_bucket_object" "lambda_my_function" {
-  bucket = aws_s3_bucket.lambda_bucket.id
-
-  key    = "function.zip"
-  source = data.archive_file.lambda_my_function.output_path
-
-  etag = filemd5(data.archive_file.lambda_my_function.output_path)
-}
-
 resource "aws_lambda_function" "my_function" {
-  function_name = "my-function-logged-terraform-${var.aws_user}"
+  function_name = "my-function-logged-tf-${var.aws_user}"
 
-  s3_bucket = aws_s3_bucket.lambda_bucket.id
-  s3_key    = aws_s3_bucket_object.lambda_my_function.key
+  filename = "${path.module}/function.zip"
 
   runtime = "nodejs14.x"
   handler = "index.handler"
 
-  source_code_hash = data.archive_file.lambda_my_function.output_base64sha256
+  source_code_hash = data.archive_file.my_function.output_base64sha256
 
   role = aws_iam_role.lambda_exec.arn
 }
@@ -70,7 +48,7 @@ resource "aws_cloudwatch_log_group" "my_function" {
 }
 
 resource "aws_iam_role" "lambda_exec" {
-  name = "lambda-exec-${var.aws_user}"
+  name = "lambda-exec-tf-${var.aws_user}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
