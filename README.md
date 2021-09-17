@@ -395,7 +395,7 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 
 1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
 2. Click on `Functions` in the left navigation
-3. Choose the function `my-function-AWSUSER`, which you created in level 0
+3. Choose the function `my-function-AWSUSER`, which you updated in level 3
 4. Copy the code from [./level-4/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-4/function/index.js) and paste it over the existing code in the editor field
 5. Press the `Deploy` button
 6. Press the `Test` button and create a test event called `joke`
