@@ -21,7 +21,7 @@ provider "aws" {
   region = var.aws_region
 }
 
-data "archive_file" "lambda_my_function" {
+data "archive_file" "my_function" {
   type = "zip"
 
   source_dir  = "${path.module}/function"
@@ -36,7 +36,7 @@ resource "aws_lambda_function" "my_function" {
   runtime = "nodejs14.x"
   handler = "index.handler"
 
-  source_code_hash = data.archive_file.lambda_my_function.output_base64sha256
+  source_code_hash = data.archive_file.my_function.output_base64sha256
 
   role = aws_iam_role.lambda_exec.arn
 }
