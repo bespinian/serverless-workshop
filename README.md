@@ -71,13 +71,13 @@ export AWSUSER=<your AWS username>
 2. Create an execution role which will allow Lambda functions to access AWS resources:
 
 ```
-aws iam create-role --role-name lambda-exec-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
+aws iam create-role --role-name lambda-exec-cli-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
 ```
 
 3. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
 
 ```
-aws iam attach-role-policy --role-name lambda-exec-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+aws iam attach-role-policy --role-name lambda-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 ```
 
 4. Create a deployment package for your function:
@@ -93,7 +93,7 @@ Find out your Account ID by clicking your username in the top right corner.
 ```
 export ACCOUNT_ID=<your account ID>
 
-aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-exec-"$AWSUSER"
+aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-exec-cli-"$AWSUSER"
 ```
 
 6. Set the `NAME` environment variable to your user name:
