@@ -288,13 +288,98 @@ aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" 
 
 ## Level 2 - Tracin' it!
 
+To reach level 2, you will learn about tracing in your function using AWS XRay.
+Additionally, we will use a DynamoDB table, which will allow us to trace calls from the function to the table.
+
+We modify the the function to read a joke from a joke table and change the function parameters to receive a `jokeID` parameter by which it reads from the database.
+
 ### Steps
 
-1. Paste code
+1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
+1. Click on `Functions` in the left navigation
+1. Choose the function `my-function-AWSUSER`, which you created in level 0
+1. Create a zip file from the `function` folder and upload it to the function
+1. Press the `Deploy` button
 1. Grant DynamoDB permission to function
 1. Grant XRay permission to function
-1. Test function
-1. Check tracing in XRay
+1. In the `Configuration` tab of the lambda function, select the `Monitoring and operations tools`, click edit and enable `Active tracing` in the `AWS X-Ray` section.
+1. On the functions `Test` tab create a test event with the following payload `{ "jokeID": "1" }` and click the `Test` button. You should see the joke loaded from the database in the response.
+1. On the `Monitor` tab, select the `Traces` menu option and inspect the service map as well as the individual traces. Click on one of the traces to get familiar of what info you have available, such as how long the request to query the DynamoDB took.
+
+### Already done? Try some of the bonus steps!
+
+<details>
+  <summary>Try it with the AWS CLI!</summary>
+
+1. Make sure the AWSUSER and ACCOUNT_ID environment variables are still set.
+
+```
+export AWSUSER=<your AWS username>
+
+export ACCOUNT_ID=<your account ID>
+```
+
+2. Create a deployment package for your new function:
+
+```
+zip -j function.zip level-1/function/index.js
+```
+
+5. Update the function with the new code:
+
+```
+aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
+```
+
+6. Invoke the function with a test event:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
+7. Inspect the traces that have been created during the last 20 minutes:
+
+```
+aws xray get-service-graph --start-time $(($(date +"%s") -1200)) --end-time $(date +"%s")
+```
+
+</details>
+
+<details>
+  <summary>Still bored? Then try it with Terraform!</summary>
+
+1. Make sure your work directory and user variables are still set
+
+```
+export WORKDIR=<your work directory>
+export TF_VAR_aws_user=<your AWS user name>
+```
+
+2. Navigate to the Terraform module
+
+```
+cp -r level-1/function $WORKDIR
+```
+
+4. Apply the Terraform module again
+
+```
+terraform apply
+```
+
+5. Invoke the function with a test event:
+
+```
+aws lambda invoke --function-name my-function-terraform-"$TF_VAR_aws_user" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
+6. Inspect the traces that have been created during the last 20 minutes:
+
+```
+aws xray get-service-graph --start-time $(($(date +"%s") -1200)) --end-time $(date +"%s")
+```
+
+</details>
 
 ## Level 3 - Timin' it!
 
