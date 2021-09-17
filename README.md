@@ -390,7 +390,7 @@ aws xray get-service-graph --start-time $(($(date +"%s") -1200)) --end-time $(da
 
 ## Level 4 - No cold starts!
 
-To reach level 4, you will need to reduce the cold start time of your function. You may do this by using a warmer pattern and by moving initialization code outside of your handler.
+To reach level 4, you will need to reduce the cold start time of your function. Warmers are usually not recommended but you can try moving initialization code outside of your handler.
 
 ### Steps
 
