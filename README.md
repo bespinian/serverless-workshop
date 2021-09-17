@@ -131,7 +131,7 @@ cp -r level-0/function $WORKDIR
 2. Navigate to the Terraform module in your work directory
 
 ```
-cd $WORKDIR
+pushd $WORKDIR
 ```
 
 3. Initialize the Terraform module
@@ -156,6 +156,12 @@ terraform apply
 
 ```
 aws lambda invoke --function-name=$(terraform output -raw function_name) response.json
+```
+
+7. Navigate back to the workshop repo
+
+```
+popd
 ```
 
 </details>
@@ -260,6 +266,12 @@ export TF_VAR_aws_user=<your AWS user name>
 cp -r level-1/function $WORKDIR
 ```
 
+3. Navigate to your work directory
+
+```
+pushd
+```
+
 4. Apply the Terraform module again
 
 ```
@@ -284,6 +296,12 @@ aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWS
 aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" --log-stream-name=<name of latest log stream>
 ```
 
+8. Navigate back to the workshop repo
+
+```
+popd
+```
+
 </details>
 
 ## Level 2 - Tracin' it!
@@ -297,8 +315,9 @@ We modify the the function to read a joke from a joke table and change the funct
 
 1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
 1. Click on `Functions` in the left navigation
-1. Choose the function `my-function-AWSUSER`, which you created in level 0
-1. Create a zip file from the `function` folder and upload it to the function
+1. Choose the function `my-function-AWSUSER`, which you updated in level 1
+1. Run `npm install` in the folder [./level-2/function](https://github.com/bespinian/serverless-workshop/tree/main/level-2/function)
+1. Create a zip file from the folder [./level-2/function](https://github.com/bespinian/serverless-workshop/tree/main/level-2/function) and upload it to the function
 1. Press the `Deploy` button
 1. Grant DynamoDB permission to function
 1. Grant XRay permission to function
@@ -340,25 +359,28 @@ aws iam attach-role-policy --role-name lambda-exec-cli-"$AWSUSER" --policy-arn a
 5. Create a deployment package for your new function:
 
 ```
-zip -j function.zip level-2/function/index.js
+pushd ./level-2/function
+npm install
+zip -r function.zip ./*
+popd
 ```
 
 6. Update the function with the new code:
 
 ```
-aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
+aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://level-2/function/function.zip
 ```
 
-7. Invoke the function with a test event:
-
-```
-aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
-```
-
-8. Switch on XRay tracing for your function
+7. Switch on XRay tracing for your function
 
 ```
 aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --tracing-config "Mode=Active"
+```
+
+8. Invoke the function with a test event:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
 ```
 
 9. Inspect the traces that have been created during the last 20 minutes:
@@ -386,22 +408,48 @@ cp level-2/advanced/terraform/* $WORKDIR
 cp -r level-2/function $WORKDIR
 ```
 
-4. Apply the Terraform module again
+3. Install the functions dependencies
+
+```
+pushd $WORKDIR/function
+npm install
+popd
+```
+
+4. Navigate to your Terraform module
+
+```
+pushd $WORKDIR
+```
+
+5. Apply the Terraform module again
 
 ```
 terraform apply
 ```
 
-5. Invoke the function with a test event:
+7. Switch on XRay tracing for your function
 
 ```
-aws lambda invoke --function-name my-function-terraform-"$TF_VAR_aws_user" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+aws lambda update-function-configuration --function-name my-function-tf-"$AWSUSER" --tracing-config "Mode=Active"
 ```
 
-6. Inspect the traces that have been created during the last 20 minutes:
+8. Invoke the function with a test event:
+
+```
+aws lambda invoke --function-name my-function-tf-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
+9. Inspect the traces that have been created during the last 20 minutes:
 
 ```
 aws xray get-service-graph --start-time $(($(date +"%s") -1200)) --end-time $(date +"%s")
+```
+
+10. Navigate back to the workshop repo
+
+```
+popd
 ```
 
 </details>
@@ -421,10 +469,11 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
 2. Click on `Functions` in the left navigation
 3. Choose the function `my-function-AWSUSER`, which you updated in level 3
-4. Copy the code from [./level-4/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-4/function/index.js) and paste it over the existing code in the editor field
-5. Press the `Deploy` button
-6. Press the `Test` button and create a test event called `joke`
-7. Paste the following JSON object to the editor field
+4. Run `npm install` in the folder [./level-4/function](https://github.com/bespinian/serverless-workshop/tree/main/level-4/function)
+5. Create a zip file from the folder [./level-4/function](https://github.com/bespinian/serverless-workshop/tree/main/level-4/function) and upload it to the function
+6. Press the `Deploy` button
+7. Press the `Test` button and create a test event called `joke`
+8. Paste the following JSON object to the editor field
 
 ```
 {
@@ -451,13 +500,16 @@ export ACCOUNT_ID=<your account ID>
 2. Create a deployment package for your new function:
 
 ```
-zip -j function.zip level-4/function/index.js
+pushd ./level-4/function
+npm install
+zip -r function.zip ./*
+popd
 ```
 
 5. Update the function with the new code:
 
 ```
-aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
+aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://level-4/function/function.zip
 ```
 
 6. Invoke the function with a test event:
@@ -484,16 +536,36 @@ export TF_VAR_aws_user=<your AWS user name>
 cp -r level-4/function $WORKDIR
 ```
 
-4. Apply the Terraform module again
+3. Install the functions dependencies
+
+```
+pushd $WORKDIR/function
+npm install
+popd
+```
+
+4. Navigate to your Terraform module
+
+```
+pushd $WORKDIR
+```
+
+5. Apply the Terraform module again
 
 ```
 terraform apply
 ```
 
-5. Invoke the function with a test event:
+6. Invoke the function with a test event:
 
 ```
 aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' out --log-type Tail
+```
+
+4. Navigate back to the workshop repo
+
+```
+popd
 ```
 
 </details>
