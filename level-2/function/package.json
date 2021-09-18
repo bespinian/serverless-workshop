@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.989.0",
-    "aws-xray-sdk": "^3.3.3"
+    "@aws-sdk/client-dynamodb": "^3.32.0",
+    "aws-xray-sdk-core": "^3.3.3"
   }
 }

@@ -1,24 +1,18 @@
-const AWSXRay = require("aws-xray-sdk");
-const AWS = AWSXRay.captureAWS(require("aws-sdk"));
-
-const TIMEOUT_GRACE_PERIOD_IN_MILLIS = 500;
+const AWSXRay = require("aws-xray-sdk-core");
+const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
 
 // share the db connection between invocations
-const ddb = new AWS.DynamoDB();
+const ddb = AWSXRay.captureAWSv3Client(new DynamoDBClient());
 
-exports.handler = async (event, context) => {
-  AWS.config.update({
-    httpOptions: {
-      timeout:
-        context.getRemainingTimeInMillis() - TIMEOUT_GRACE_PERIOD_IN_MILLIS,
-    },
-  });
-
+exports.handler = async (event) => {
+  const tableSuffix = process.env.JOKE_TABLE_SUFFIX
+    ? process.env.JOKE_TABLE_SUFFIX
+    : "";
   const params = {
-    TableName: "Jokes",
-    Key: { ID: { S: event.jokeID } },
+    TableName: "Jokes" + tableSuffix,
+    Key: { ID: { N: event.jokeID } },
   };
 
-  const response = await ddb.getItem(params).promise();
+  const response = await ddb.send(new GetItemCommand(params));
   return response.Item;
 };

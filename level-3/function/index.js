@@ -1,11 +1,11 @@
-const AWSXRay = require("aws-xray-sdk");
-const AWS = AWSXRay.captureAWS(require("aws-sdk"));
+const AWSXRay = require("aws-xray-sdk-core");
+const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
 
 const TIMEOUT_GRACE_PERIOD_IN_MILLIS = 980;
 
-const ddb = new AWS.DynamoDB();
-
 exports.handler = async (event, context) => {
+  const ddb = AWSXRay.captureAWSv3Client(new DynamoDBClient());
+
   const tableSuffix = process.env.JOKE_TABLE_SUFFIX
     ? process.env.JOKE_TABLE_SUFFIX
     : "";
@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
     )
   );
 
-  responsePromise = ddb.getItem(params).promise();
+  responsePromise = ddb.send(new GetItemCommand(params));
 
   try {
     response = await Promise.race([timoutPromise, responsePromise]);
@@ -31,7 +31,7 @@ exports.handler = async (event, context) => {
     );
 
     return {
-      joke: response.Item.text.S,
+      joke: response.Item.Text.S,
     };
   } catch (e) {
     if (e.message == "Timeout") {

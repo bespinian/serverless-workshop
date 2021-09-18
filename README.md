@@ -503,25 +503,28 @@ export ACCOUNT_ID=<your account ID>
 2. Create a deployment package for your new function:
 
 ```
-zip -j function.zip level-3/function/index.js
+pushd ./level-3/function
+npm install
+zip -r function.zip ./*
+popd
 ```
 
 3. Update the function with the new code:
 
 ```
-aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
+aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://level-3/function/function.zip
 ```
 
 4. Update the function's timeout setting to 1 second:
 
 ```
-aws lambda update-function-configuration --function-name my-function-terraform-gk --timeout 1
+aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --timeout 1
 ```
 
 5.  Invoke the function with a test event:
 
 ```
-aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
 ```
 
 6. Note that the function succeeds, but in the output tells you, that it ran into a timeout.
@@ -529,13 +532,13 @@ aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --payload '{ "j
 7. Update the function's timeout setting to 2 seconds:
 
 ```
-aws lambda update-function-configuration --function-name my-function-terraform-gk --timeout 2
+aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --timeout 2
 ```
 
 8.  Invoke the function again with a test event:
 
 ```
-aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
 ```
 
 9. Note that the function succeeds and returns the joke.
