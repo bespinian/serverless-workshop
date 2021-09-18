@@ -1,8 +1,6 @@
-import AWS from "aws-sdk";
+const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 
-AWS.config.update({ region: "eu-central-1" });
-
-const sqs = new AWS.SQS();
+const sqs = new SQSClient({ region: "eu-central-1" });
 
 exports.handler = async (event) => {
   const params = {
@@ -10,7 +8,7 @@ exports.handler = async (event) => {
     QueueUrl: "SQS_QUEUE_URL",
   };
 
-  sqs.sendMessage(params, (err, data) => {
+  sqs.send(new SendMessageCommand(params), (err, data) => {
     if (err) {
       console.log("Error", err);
     } else {
