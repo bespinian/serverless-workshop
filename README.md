@@ -322,7 +322,7 @@ export ACCOUNT_ID=<your account ID>
 2. Create a deployment package for your new function:
 
 ```
-zip -j function.zip level-1/function/index.js
+zip -j function.zip level-2/function/index.js
 ```
 
 5. Update the function with the new code:
@@ -355,10 +355,11 @@ export WORKDIR=<your work directory>
 export TF_VAR_aws_user=<your AWS user name>
 ```
 
-2. Navigate to the Terraform module
+2. Copy the new terraform code into your work directory
 
 ```
-cp -r level-1/function $WORKDIR
+cp -r level-2/advanced/terraform $WORKDIR
+cp -r level-2/function $WORKDIR
 ```
 
 4. Apply the Terraform module again
@@ -383,9 +384,140 @@ aws xray get-service-graph --start-time $(($(date +"%s") -1200)) --end-time $(da
 
 ## Level 3 - Timin' it!
 
+To reach this level, we'll make sure our function terminates orderly within the timeout limit it's configured with.
+This means, aborting IO operations or long running calculations when the function time runs out, or at least return to your program flow to handle the return values.
+To do this, .  
+The AWS Lambda frameworks allow us to poll how much time is still left in a function call, which simplifies this.
+
+Before you deploy the improved function to lambda, inspect the provided code.
+You will notice the following points:
+
+- The usage of `context.getRemainingTimeInMillis()` to receive from Lambda how much time is left in our function
+- An additional grace period, we retain for our function in `TIMEOUT_GRACE_PERIOD_IN_MILLIS`
+- That we trigger a promise, that rejects when the remaining time is below the grace period.
+
+> Note!
+>
+> Some AWS resources support the usage of an [AbortController](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/interfaces/_aws_sdk_types.abortcontroller-1.html) to terminate those actions.
+> When doing IO operations using resources that do not support it or doing long running computations, make sure you set timeouts or implement a timeout check yourself.
+
 ### Steps
 
-1. Paste code
+1. Inspect the provided code as described above
+1. Click on `Functions` in the left navigation
+1. Choose the function `my-function-AWSUSER`, which you created in level 0
+1. In the `Configuration` tab of the function, select the `General configuration` menu and set the timeout to 1 second
+1. Note that now only <20ms will be available for the DynamoDB query, because our grace period is set to 980ms
+1. Create a zip file from the `function` folder and upload it to the function
+1. Press the `Deploy` button
+1. On the functions `Test` tab create a test event with the following payload `{ "jokeID": "1" }` and click the `Test` button.
+   You should see the function returning successfully, but with a message, that it reached the timeout.
+1. Set the timeout to 2 seconds and try again.
+   This time, the function should be able to read the joke from the database and return it.
+
+### Already done? Try some of the bonus steps!
+
+<details>
+  <summary>Try it with the AWS CLI!</summary>
+
+1. Make sure the AWSUSER and ACCOUNT_ID environment variables are still set.
+
+```
+export AWSUSER=<your AWS username>
+
+export ACCOUNT_ID=<your account ID>
+```
+
+2. Create a deployment package for your new function:
+
+```
+zip -j function.zip level-3/function/index.js
+```
+
+3. Update the function with the new code:
+
+```
+aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
+```
+
+4. Update the function's timeout setting to 1 second:
+
+```
+aws lambda update-function-configuration --function-name my-function-terraform-gk --timeout 1
+```
+
+5.  Invoke the function with a test event:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
+6. Note that the function succeeds, but in the output tells you, that it ran into a timeout.
+
+7. Update the function's timeout setting to 2 seconds:
+
+```
+aws lambda update-function-configuration --function-name my-function-terraform-gk --timeout 2
+```
+
+8.  Invoke the function again with a test event:
+
+```
+aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
+9. Note that the function succeeds and returns the joke.
+
+</details>
+
+<details>
+  <summary>Still bored? Then try it with Terraform!</summary>
+
+1. Make sure your work directory and user variables are still set
+
+```
+export WORKDIR=<your work directory>
+export TF_VAR_aws_user=<your AWS user name>
+```
+
+2. Copy the terraform module and the function code from level 3
+
+```
+cp -r level-3/advanced/terraform $WORKDIR
+cp -r level-3/function $WORKDIR
+```
+
+3. Apply the Terraform module again
+
+```
+terraform apply
+```
+
+4. Invoke the function with a test event:
+
+```
+aws lambda invoke --function-name my-function-terraform-"$TF_VAR_aws_user" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
+Note that the function returns but the response contains an error message because it ran into a timeout.
+
+5. Change the timeout setting of the function in the terraform module in your working directory
+
+6. Apply the Terraform module again
+
+```
+terraform apply
+```
+
+7. Invoke the function with another test event:
+
+```
+aws lambda invoke --function-name my-function-terraform-"$TF_VAR_aws_user" out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+```
+
+Note that the function returns successfully and the response contains the joke loaded from the database.
+
+</details>
 
 ## Level 4 - No cold starts!
 
