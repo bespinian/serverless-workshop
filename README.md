@@ -456,7 +456,7 @@ popd
 
 ## Level 3 - Timin' it!
 
-To reach this level, we'll make sure our function terminates orderly within the timeout limit it's configured with.
+To reach this level, we'll make sure our function terminates in an orderly fashion within the timeout limit it is configured with.
 This means, aborting IO operations or long running calculations when the function time runs out, or at least return to your program flow to handle the return values.
 To do this, .  
 The AWS Lambda frameworks allow us to poll how much time is still left in a function call, which simplifies this.
