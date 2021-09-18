@@ -62,6 +62,12 @@ resource "aws_lambda_function" "my_function" {
 
   timeout = 1
 
+  environment {
+    variables = {
+      JOKE_TABLE_SUFFIX = "-${var.aws_user}"
+    }
+  }
+
   tracing_config {
     mode = "Active"
   }
