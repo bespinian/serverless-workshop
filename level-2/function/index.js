@@ -5,7 +5,7 @@ const ddb = new AWS.DynamoDB();
 
 exports.handler = async (event) => {
   const params = {
-    TableName: "Jokes-gk",
+    TableName: "Jokes",
     Key: { ID: { N: event.jokeID } },
   };
 
