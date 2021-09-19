@@ -21,7 +21,7 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "aws_dynamodb_table_item" "joke-1" {
+resource "aws_dynamodb_table_item" "joke_1" {
   table_name = aws_dynamodb_table.jokes.name
   hash_key   = aws_dynamodb_table.jokes.hash_key
 

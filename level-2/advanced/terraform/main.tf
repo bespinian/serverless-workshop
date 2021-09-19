@@ -21,7 +21,7 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "aws_dynamodb_table_item" "joke-1" {
+resource "aws_dynamodb_table_item" "joke_1" {
   table_name = aws_dynamodb_table.jokes.name
   hash_key   = aws_dynamodb_table.jokes.hash_key
 
@@ -86,14 +86,12 @@ resource "aws_iam_role" "lambda_exec" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole"
       Effect = "Allow"
-      Sid    = ""
       Principal = {
         Service = "lambda.amazonaws.com"
       }
-      }
-    ]
+      Action = "sts:AssumeRole"
+    }]
   })
 }
 
