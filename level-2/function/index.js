@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     TableName: `Jokes${tableSuffix}`,
     Key: { ID: { N: event.jokeID } },
   });
-
   const response = await ddb.send(cmd);
+
   return response.Item;
 };
