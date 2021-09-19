@@ -1,9 +1,9 @@
 const AWSXRay = require("aws-xray-sdk-core");
 const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
 
-const TIMEOUT_GRACE_PERIOD_IN_MILLIS = 980;
-
 exports.handler = async (event, context) => {
+  const TIMEOUT_GRACE_PERIOD_IN_MILLIS = 980;
+
   const tableSuffix = process.env.JOKE_TABLE_SUFFIX
     ? process.env.JOKE_TABLE_SUFFIX
     : "";
@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
       `Remaining time after db query is ${context.getRemainingTimeInMillis()}ms.`
     );
 
-    return { joke: response.Item.Text.S };
+    return response.Item;
   } catch (err) {
     if (err.message == "Timeout") {
       return {

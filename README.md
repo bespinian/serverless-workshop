@@ -6,6 +6,10 @@ This workshop consists of multiple levels of increasing difficulty. The basic tr
 
 At the start of the course, please take care of the following tasks:
 
+### Clone this repo
+
+Run `git clone https://github.com/bespinian/serverless-workshop.git` to clone this repo with all its steps
+
 ### Test your AWS login
 
 You have received an AWS Account ID, an IAM user name and a password from the trainers. Please navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
@@ -176,10 +180,7 @@ To reach level 1, you'll need to learn about the following topics:
 
 ### Steps
 
-1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
-1. Click on `Functions` in the left navigation
-1. Choose the function `my-function-AWSUSER`, which you created in level 0
-1. Copy the code from [./level-1/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-1/function/index.js) and paste it over the existing code in the editor field
+1. In the Lambda GUI of your function, copy the code from [./level-1/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-1/function/index.js) and paste it over the existing code in the editor field
 1. Press the `Deploy` button
 1. Press the `Test` button and create a test event called `bob`
 1. Paste the following JSON object to the editor field
@@ -304,21 +305,24 @@ To reach level 1, you'll need to learn about the following topics:
 
 ## Level 2 - Tracin' it!
 
-To reach level 2, you will learn about tracing in your function using AWS XRay.
+To reach level 2, you will learn about tracing in your function using AWS X-Ray.
 Additionally, we will use a DynamoDB table, and trace calls from the function to the table.
 
 We modify the function to read a joke from a joke table and change the function parameters to receive a `jokeID` parameter by which it reads from the database.
 
 ### Steps
 
-1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
-1. Click on `Functions` in the left navigation
-1. Choose the function `my-function-AWSUSER`, which you updated in level 1
-1. Run `npm install` in the folder [./level-2/function](https://github.com/bespinian/serverless-workshop/tree/main/level-2/function)
+1. From your terminal, `cd` into the [./level-2/function](https://github.com/bespinian/serverless-workshop/tree/main/level-2/function) directory of this repo
+1. Run `npm install`
 1. Create a zip file from the folder [./level-2/function](https://github.com/bespinian/serverless-workshop/tree/main/level-2/function) and upload it to the function
+
+   ```shell
+   zip -r function.zip .
+   ```
+
 1. Press the `Deploy` button
-1. Grant DynamoDB permission to function
-1. Grant XRay permission to function
+1. In the `Configuration` tab, click `Permissions` and then the link to the execution role
+1. Click the `Attach Policies` button and add the "AmazonDynamoDBReadOnlyAccess" and the "AWSXRayDaemonWriteAccess" permissions to grant your function access to DynamoDB and the X-Ray service
 1. In the `Configuration` tab of the lambda function, select the `Monitoring and operations tools`, click edit and enable `Active tracing` in the `AWS X-Ray` section.
 1. On the functions `Test` tab create a test event with the following payload `{ "jokeID": "1" }` and click the `Test` button. You should see the joke loaded from the database in the response.
 1. On the `Monitor` tab, select the `Traces` menu option and inspect the service map as well as the individual traces. Click on one of the traces to get familiar of what info you have available, such as how long the request to query the DynamoDB took.
@@ -335,7 +339,7 @@ We modify the function to read a joke from a joke table and change the function 
    export ACCOUNT_ID=<your account ID>
    ```
 
-1. Attach a policy for XRay access to your role
+1. Attach a policy for X-Ray access to your role
 
    ```shell
    aws iam attach-role-policy --role-name lambda-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
@@ -368,7 +372,7 @@ We modify the function to read a joke from a joke table and change the function 
    aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://level-2/function/function.zip
    ```
 
-1. Switch on XRay tracing for your function
+1. Switch on X-Ray tracing for your function
 
    ```shell
    aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --tracing-config "Mode=Active"
@@ -425,7 +429,7 @@ We modify the function to read a joke from a joke table and change the function 
    terraform apply
    ```
 
-1. Switch on XRay tracing for your function
+1. Switch on X-Ray tracing for your function
 
    ```shell
    aws lambda update-function-configuration --function-name my-function-tf-"$AWSUSER" --tracing-config "Mode=Active"
@@ -590,7 +594,7 @@ You will notice the following points:
 
 </details>
 
-## Level 4 - No cold starts!
+## Level 4 - Optimized Cold Starts!
 
 To reach level 4, you will need to reduce the cold start time of your function. Warmers are usually not recommended but you can try moving initialization code outside of your handler.
 
