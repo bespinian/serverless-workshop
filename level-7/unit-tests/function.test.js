@@ -1,0 +1,44 @@
+const { mockClient } = require("aws-sdk-client-mock");
+const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
+const handler = require("./index.js").handler;
+
+const ddbMock = mockClient(DynamoDBClient);
+
+beforeEach(() => {
+  ddbMock.reset();
+
+  ddbMock.on(GetItemCommand, { TableName: "Jokes" }).resolves({
+    Item: {
+      ID: {
+        N: "1",
+      },
+      Text: {
+        S: "funny joke from shared table",
+      },
+    },
+  });
+
+  ddbMock.on(GetItemCommand, { TableName: "Jokes-test-user" }).resolves({
+    Item: {
+      ID: {
+        N: "1",
+      },
+      Text: {
+        S: "funny joke from user-specific table",
+      },
+    },
+  });
+});
+
+test("A joke is returned from the shared table", async () => {
+  const result = await handler({ jokeID: "1" });
+  expect(result).toBeDefined();
+  expect(result.Text.S).toBe("funny joke from shared table");
+});
+
+test("Table suffix env variable is honored", async () => {
+  process.env.JOKE_TABLE_SUFFIX = "-test-user";
+  const result = await handler({ jokeID: "1" });
+  expect(result).toBeDefined();
+  expect(result.Text.S).toBe("funny joke from user-specific table");
+});
