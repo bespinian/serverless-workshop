@@ -710,3 +710,74 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 ## Level 6 - Infra as Code ... duh!
 
 ### Steps
+
+## Level 7 - Testing ... duh!
+
+To reach level 7 you need to know how to
+
+1. unit test your functions and
+2. run your functions locally to make debugging easier
+
+### Steps
+
+1. Navigate to to the unit test example and install the dependencies:
+
+```shell
+pushd level-7/unit-tests
+npm install
+```
+
+2. Inspect the example function, the service mocks and the tests:
+
+```shell
+cat index.js
+cat index.test.js
+```
+
+4. Run the tests for the example function:
+
+```shell
+npm test
+popd
+```
+
+5. Navigate to the local execution example and install the dependencies
+
+```shell
+pushd level-7/api-to-serverless
+npm install
+```
+
+6. Inspect the express API and the function code
+
+```shell
+cat api.js
+cat index.js
+```
+
+7. Run the example locally as an express API:
+
+```shell
+npm run start
+```
+
+8. Make a request to the api in a new terminal:
+
+```shell
+curl -X GET -v -H'Content-Type:application/json' http://localhost:3000/ -d '{"name":"Bob" }'
+```
+
+9. Package your function
+
+```shell
+zip -r function.zip ./*
+
+```
+
+10. Deploy your function using the UI, the CLI or Terraform and invoke it with a test event of the following form:
+
+```json
+{
+  "name": "Bob"
+}
+```
