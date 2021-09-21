@@ -281,7 +281,7 @@ To reach level 1, you'll need to learn about the following topics:
 1. Navigate to your work directory
 
    ```shell
-   pushd
+   pushd $WORKDIR
    ```
 
 1. Apply the Terraform module again
