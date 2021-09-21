@@ -130,10 +130,16 @@ Please work through the following steps:
 <details>
   <summary>Still bored? Then try it with Terraform!</summary>
 
-1. Copy the Terraform module to a directory of your choice
+1. Decide on a separate work directory for running the Terraform module
 
    ```shell
    export WORKDIR=<your work directory>
+
+   ```
+
+1. Copy the Terraform module and the function code to your work directory
+
+   ```shell
    mkdir $WORKDIR
    cp level-0/advanced/terraform/* $WORKDIR
    cp -r level-0/function $WORKDIR
