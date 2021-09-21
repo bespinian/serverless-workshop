@@ -7,7 +7,7 @@ const ddbMock = mockClient(DynamoDBClient);
 beforeEach(() => {
   ddbMock.reset();
 
-  ddbMock.on(GetItemCommand, { TableName: "Jokes" }).resolves({
+  ddbMock.on(GetItemCommand, { TableName: "jokes" }).resolves({
     Item: {
       ID: {
         N: "1",
@@ -18,7 +18,7 @@ beforeEach(() => {
     },
   });
 
-  ddbMock.on(GetItemCommand, { TableName: "Jokes-test-user" }).resolves({
+  ddbMock.on(GetItemCommand, { TableName: "jokes-test-user" }).resolves({
     Item: {
       ID: {
         N: "1",

@@ -1,9 +1,10 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const app = express();
+
 const port = 3000;
 
-app.use(bodyParser.json());
+const app = express();
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
   const name = req.body.name || JSON.parse(req.body).name; // hack to make this work with AWS lambda test events
@@ -16,4 +17,4 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
-exports.app = app;
+module.exports = app;

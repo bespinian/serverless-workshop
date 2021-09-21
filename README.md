@@ -4,11 +4,11 @@ This workshop consists of multiple levels of increasing difficulty. The basic tr
 
 ## Preparation
 
-At the start of the course, please take care of the following tasks:
+At the start of the course, take care of the following tasks:
 
 ### Ensure Node.js is installed
 
-Please ensure that you have Node.js runtime version 14.x or higher installed on your machine. If you need to install it, please follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, please type `npm` in a shell, to check that it is available.
+Ensure that you have Node.js runtime version 14.x or higher installed on your machine. If you need to install it, follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, type `npm` in a shell, to check that it is available.
 
 ### Clone this repo
 
@@ -16,13 +16,13 @@ Next you will need this repo on you own machine. Run `git clone https://github.c
 
 ### Test your AWS login
 
-Last but not least, you will of course also need access to AWS. You have received an AWS Account ID, an IAM user name and a password from the trainers. Please navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
+Last but not least, you will of course also need access to AWS. You have received an AWS Account ID, an IAM user name and a password from the trainers. navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
 
 ### Optional: Install the AWS CLI
 
 #### Installation
 
-If you want to also work on some of the optional extra topics of this course, you need to install the AWS CLI on your machine. Please follow the [AWS CLI installation instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and choose the installation method best suited for your operating system.
+If you want to also work on some of the optional extra topics of this course, you need to install the AWS CLI on your machine. follow the [AWS CLI installation instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and choose the installation method best suited for your operating system.
 
 #### Authentication
 
@@ -42,7 +42,7 @@ In order to authenticate your CLI you need to first create an access key by perf
 
 ### Optional: Install Terraform
 
-Some optional extra topics also require Terraform, which you need to install on your machine. Please follow the [Terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli) and choose the installation method best suited for your operating system.
+Some optional extra topics also require Terraform, which you need to install on your machine. follow the [Terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli) and choose the installation method best suited for your operating system.
 
 ## Level 0 - This is easy!
 
@@ -50,7 +50,7 @@ In this level, you will learn how to create a first simple function in AWS Lambd
 
 ### Steps
 
-Please work through the following steps:
+Work through the following steps:
 
 1. Go to the [AWS Lambda GUI](https://console.aws.amazon.com/lambda)
 1. Choose "Europe (Frankfurt) eu-central-1" as the region in the top right corner
@@ -358,10 +358,10 @@ We modify the function to read a joke from a joke table and change the function 
    aws iam attach-role-policy --role-name lambda-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
    ```
 
-1. Create a policy for access to the Jokes table in DynamoDB
+1. Create a policy for access to the jokes table in DynamoDB
 
    ```shell
-   aws iam create-policy --policy-name read-jokes-db-table-cli-"$AWSUSER" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/Jokes" }]}'
+   aws iam create-policy --policy-name read-jokes-db-table-cli-"$AWSUSER" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/jokes" }]}'
    ```
 
 1. Attach the policy to your role
@@ -718,7 +718,35 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 
 ## Level 5 - Decouplin' it!
 
+To reach level 5, you'll need to learn how to decouple multiple functions asynchronously via a message queue.
+
 ### Steps
+
+1. Navigate to to the level 5 code and install the dependencies:
+
+   ```shell
+   cd level-5/function
+   npm install
+   ```
+
+1. Package your function
+
+   ```shell
+   zip -r function.zip ./*
+   ```
+
+1. In the Lambda GUI, create a new function called `sender-AWSUSER` (replace AWSUSER with your username) and leave all the defaults
+1. Create another function called `recipient-AWSUSER` (replace AWSUSER with your username) and leave all the defaults
+1. Upload `function.zip` to both functions and inspect the file. It defines and exports two different handlers. The first one sends an event to an SQS queue and the second one receives it.
+1. Scroll down to `Runtime settings` and change the Handler to `index.senderHandler` for the sender function and to `index.recipientHandler` for the recipient function. For Node.js, the "index" part refers to the file name and the "handler" part to the name of the export. So we can have multiple functions in the same source code.
+1. Head over to the [SQS GUI](https://eu-central-1.console.aws.amazon.com/sqs/v2/home) and create a new queue called `messages-AWSUSER` replacing AWSUSER with your user name and leave all the defaults. Then copy the URL of your newly created function to the clipboard. The URL can be found in the "Details" of the queue.
+1. Set the `SQS_QUEUE_URL` environment variable to the name of the queue you have just created for the sender function
+1. Give the sender function the permission to send messages to the queue by clicking its role name in the "Configuration" tab under "Permissions". Then attach the policy called `AmazonSQSFullAccess`.
+1. Give the recipient function the permission to read messages from the queue by clicking its role name in the "Configuration" tab under "Permissions". Then attach the policy called `AWSLambdaSQSQueueExecutionRole`.
+1. Go to the recipient's GUI and add a trigger by clicking the "Add trigger" button. Then choose "SQS" and choose your newly created queue.
+1. Trigger your sender function with a test event
+1. Head over to CloudWatch to examine the logs of the sender function. It has dispatched a message to the message queue.
+1. Examine the logs of the recipient function. It has been asynchronously triggered by the sender function via the message queue.
 
 ## Level 6 - Infra as Code ... duh!
 
@@ -728,69 +756,68 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 
 To reach level 7 you need to know how to
 
-1. unit test your functions and
-2. run your functions locally to make debugging easier
+- Unit test your functions
+- Run your functions locally to make debugging easier
 
 ### Steps
 
 1. Navigate to to the unit test example and install the dependencies:
 
-```shell
-pushd level-7/unit-tests
-npm install
-```
+   ```shell
+   pushd level-7/unit-tests
+   npm install
+   ```
 
-2. Inspect the example function, the service mocks and the tests:
+1. Inspect the example function, the service mocks and the tests:
 
-```shell
-cat index.js
-cat index.test.js
-```
+   ```shell
+   cat index.js
+   cat index.test.js
+   ```
 
-4. Run the tests for the example function:
+1. Run the tests for the example function:
 
-```shell
-npm test
-popd
-```
+   ```shell
+   npm test
+   popd
+   ```
 
-5. Navigate to the local execution example and install the dependencies
+1. Navigate to the local execution example and install the dependencies
 
-```shell
-pushd level-7/api-to-serverless
-npm install
-```
+   ```shell
+   pushd level-7/api-to-serverless
+   npm install
+   ```
 
-6. Inspect the express API and the function code
+1. Inspect the express API and the function code
 
-```shell
-cat api.js
-cat index.js
-```
+   ```shell
+   cat api.js
+   cat index.js
+   ```
 
-7. Run the example locally as an express API:
+1. Run the example locally as an express API:
 
-```shell
-npm run start
-```
+   ```shell
+   npm start
+   ```
 
-8. Make a request to the api in a new terminal:
+1. Make a request to the API in a new terminal:
 
-```shell
-curl -X GET -v -H'Content-Type:application/json' http://localhost:3000/ -d '{"name":"Bob" }'
-```
+   ```shell
+   curl -X GET http://localhost:3000 -H 'Content-Type:application/json' -d '{ "name":"Bob" }'
+   ```
 
-9. Package your function
+1. Package your function
 
-```shell
-zip -r function.zip ./*
+   ```shell
+   zip -r function.zip ./*
+   ```
 
-```
+1. Deploy your function using the UI, the CLI or Terraform and invoke it with a test event of the following form:
 
-10. Deploy your function using the UI, the CLI or Terraform and invoke it with a test event of the following form:
-
-```json
-{
-  "name": "Bob"
-}
-```
+   ```json
+   {
+     "name": "Bob"
+   }
+   ```
