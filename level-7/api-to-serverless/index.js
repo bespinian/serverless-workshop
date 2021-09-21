@@ -1,4 +1,4 @@
 const serverless = require("serverless-http");
-const app = require("./api.js").app;
+const app = require("./app");
 
 exports.handler = serverless(app);
