@@ -95,13 +95,16 @@ Please work through the following steps:
    zip -j function.zip level-0/function/index.js
    ```
 
-1. Create the function:
-
-   Find out your Account ID by clicking your username in the top right corner.
+1. Find out your Account ID by clicking your username in the top right corner.
 
    ```shell
    export ACCOUNT_ID=<your account ID>
-   aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-exec-cli-"$AWSUSER"
+   ```
+
+1. Create the function:
+
+   ```shell
+    aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-exec-cli-"$AWSUSER"
    ```
 
 1. Set the `NAME` environment variable to your user name:
