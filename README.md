@@ -598,7 +598,7 @@ You will notice the following points:
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-terraform-"$TF_VAR_aws_user" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
    Note that the function returns but the response contains an error message because it ran into a timeout.
@@ -614,7 +614,7 @@ You will notice the following points:
 1. Invoke the function with another test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-terraform-"$TF_VAR_aws_user" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
    Note that the function returns successfully and the response contains the joke loaded from the database.
