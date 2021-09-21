@@ -1,18 +1,22 @@
 # Level Up Your Serverless Game
 
-This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, if you prefer working with the [AWS CLI](https://aws.amazon.com/cli/) or with [Terraform](https://www.terraform.io/) you may switch to one of these technologies at any stage in the course. If you stay on the basic track, there is nothing to install on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
+This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, if you prefer working with the [AWS CLI](https://aws.amazon.com/cli/) or with [Terraform](https://www.terraform.io/) you may switch to one of these technologies at any stage in the course. All serverless function in this course will be written in Node.js. If you stay on the basic track, you will only need to have the Node.js runtime and `npm` installed on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
 
 ## Preparation
 
 At the start of the course, please take care of the following tasks:
 
+### Ensure Node.js is installed
+
+Please ensure that you have Node.js runtime version 14.x or higher installed on your machine. If you need to install it, please follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, please type `npm` in a shell, to check that it is available.
+
 ### Clone this repo
 
-Run `git clone https://github.com/bespinian/serverless-workshop.git` to clone this repo with all its steps
+Next you will need this repo on you own machine. Run `git clone https://github.com/bespinian/serverless-workshop.git` to clone this repo with all its steps
 
 ### Test your AWS login
 
-You have received an AWS Account ID, an IAM user name and a password from the trainers. Please navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
+Last but not least, you will of course also need access to AWS. You have received an AWS Account ID, an IAM user name and a password from the trainers. Please navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
 
 ### Optional: Install the AWS CLI
 
