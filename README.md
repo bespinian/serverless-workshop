@@ -116,13 +116,13 @@ Work through the following steps:
 1. Invoke the function:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --log-type Tail
    ```
 
 1. Invoke the function and decode the logs:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 </details>
@@ -165,7 +165,7 @@ Work through the following steps:
 1. Invoke the function
 
    ```shell
-   aws lambda invoke --function-name=$(terraform output -raw function_name) response.json
+   aws lambda invoke --function-name=$(terraform output -raw function_name) output.json
    ```
 
 1. Navigate back to the workshop repo
@@ -238,7 +238,7 @@ To reach level 1, you'll need to learn about the following topics:
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' out --log-type Tail
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
    ```
 
 1. Find the latest log stream for your function in CloudWatch:
@@ -285,7 +285,7 @@ To reach level 1, you'll need to learn about the following topics:
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' out --log-type Tail
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
    ```
 
 1. Find the latest log stream for your function in CloudWatch:
@@ -386,7 +386,7 @@ We modify the function to read a joke from a joke table and change the function 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Inspect the traces that have been created during the last 20 minutes:
@@ -443,7 +443,7 @@ We modify the function to read a joke from a joke table and change the function 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-tf-"$AWSUSER" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Inspect the traces that have been created during the last 20 minutes:
@@ -529,7 +529,7 @@ You will notice the following points:
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Note that the function succeeds, but in the output tells you, that it ran into a timeout.
@@ -543,7 +543,7 @@ You will notice the following points:
 1. Invoke the function again with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Note that the function succeeds and returns the joke.
@@ -590,7 +590,7 @@ You will notice the following points:
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
    Note that the function returns but the response contains an error message because it ran into a timeout.
@@ -606,7 +606,7 @@ You will notice the following points:
 1. Invoke the function with another test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" out --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
    Note that the function returns successfully and the response contains the joke loaded from the database.
@@ -673,7 +673,7 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' out --log-type Tail
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 </details>
@@ -716,7 +716,7 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' out --log-type Tail
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 1. Navigate back to the workshop repo
@@ -832,7 +832,7 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Invoke the sender function:
 
    ```shell
-   aws lambda invoke --function-name sender-cli-"$AWSUSER" out --log-type Tail
+   aws lambda invoke --function-name sender-cli-"$AWSUSER" output.json --log-type Tail
    ```
 
 1. Check out the logs of the sender function to see that the message has been sent:
