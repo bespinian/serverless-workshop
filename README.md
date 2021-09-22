@@ -768,13 +768,12 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 
    ```shell
    export AWSUSER=<your AWS username>
-   export ACCOUNT_ID=<your account ID>
    ```
 
 1. Create a deployment package for your new functions:
 
    ```shell
-   cd ./level-5/function
+   cd level-5/function
    npm install
    zip -r function.zip ./*
    ```
@@ -790,8 +789,10 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Create two new functions:
 
    ```shell
-   aws lambda create-function --function-name sender-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/sender-exec-cli-"$AWSUSER"
-   aws lambda create-function --function-name recipient-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/recipient-exec-cli-"$AWSUSER"
+   export SENDER_ROLE_ARN=$(aws iam get-role --role-name sender-exec-cli-"$AWSUSER" --query Role.Arn --output text)
+   aws lambda create-function --function-name sender-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs14.x --role "$SENDER_ROLE_ARN"
+   export RECIPIENT_ROLE_ARN=$(aws iam get-role --role-name recipient-exec-cli-"$AWSUSER" --query Role.Arn --output text)
+   aws lambda create-function --function-name recipient-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs14.x --role "$RECIPIENT_ROLE_ARN"
    ```
 
 1. Create a new message queue
@@ -824,7 +825,7 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Set the SQS queue as a trigger for the recipient function:
 
    ```shell
-   eport SQS_QUEUE_ARN=$(aws sqs get-queue-attributes --queue-url "$SQS_QUEUE_URL" --attribute-names QueueArn --query Attributes.QueueArn --output text)
+   export SQS_QUEUE_ARN=$(aws sqs get-queue-attributes --queue-url "$SQS_QUEUE_URL" --attribute-names QueueArn --query Attributes.QueueArn --output text)
    aws lambda create-event-source-mapping --function-name recipient-cli-"$AWSUSER" --event-source-arn "$SQS_QUEUE_ARN"
    ```
 
@@ -834,10 +835,16 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
    aws lambda invoke --function-name sender-cli-"$AWSUSER" out --log-type Tail
    ```
 
-1. Check out the logs of the recipient function to see that it has been triggered:
+1. Check out the logs of the sender function to see that the message has been sent:
 
    ```shell
-   aws logs tail /aws/lambda/recipient-"$AWSUSER"
+   aws logs tail /aws/lambda/sender-cli-"$AWSUSER"
+   ```
+
+1. Check out the logs of the recipient function to see that it has been triggered and the message has been received:
+
+   ```shell
+   aws logs tail /aws/lambda/recipient-cli-"$AWSUSER"
    ```
 
 </details>
