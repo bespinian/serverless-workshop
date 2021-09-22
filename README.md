@@ -1,6 +1,6 @@
 # Level Up Your Serverless Game
 
-This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, if you prefer working with the [AWS CLI](https://aws.amazon.com/cli/) or with [Terraform](https://www.terraform.io/), you may switch to one of these technologies at any stage in the course. All serverless function in this course are written in Node.js. If you stay on the basic track, you will only need to have the Node.js runtime and `npm` installed on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
+This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, if you prefer working with the [AWS CLI version 2](https://aws.amazon.com/cli/) or with [Terraform](https://www.terraform.io/), you may switch to one of these technologies at any stage in the course. All serverless function in this course are written in Node.js. If you stay on the basic track, you will only need to have the Node.js runtime and `npm` installed on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
 
 ## Preparation
 
@@ -814,11 +814,30 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
    aws iam attach-role-policy --role-name sender-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/AmazonSQSFullAccess
    ```
 
-1. Give your recipient function the permission to read messages from the queue:
+1. Give your recipient function the permission to log and read messages from the queue:
 
    ```shell
    aws iam attach-role-policy --role-name recipient-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
    aws iam attach-role-policy --role-name recipient-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+   ```
+
+1. Set the SQS queue as a trigger for the recipient function:
+
+   ```shell
+   eport SQS_QUEUE_ARN=$(aws sqs get-queue-attributes --queue-url "$SQS_QUEUE_URL" --attribute-names QueueArn --query Attributes.QueueArn --output text)
+   aws lambda create-event-source-mapping --function-name recipient-cli-"$AWSUSER" --event-source-arn "$SQS_QUEUE_ARN"
+   ```
+
+1. Invoke the sender function:
+
+   ```shell
+   aws lambda invoke --function-name sender-cli-"$AWSUSER" out --log-type Tail
+   ```
+
+1. Check out the logs of the recipient function to see that it has been triggered:
+
+   ```shell
+   aws logs tail /aws/lambda/recipient-"$AWSUSER"
    ```
 
 </details>
