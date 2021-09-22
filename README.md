@@ -1,12 +1,12 @@
 # Level Up Your Serverless Game
 
-This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, if you prefer working with the [AWS CLI](https://aws.amazon.com/cli/) or with [Terraform](https://www.terraform.io/) you may switch to one of these technologies at any stage in the course. All serverless function in this course will be written in Node.js. If you stay on the basic track, you will only need to have the Node.js runtime and `npm` installed on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
+This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, if you prefer working with the [AWS CLI](https://aws.amazon.com/cli/) or with [Terraform](https://www.terraform.io/), you may switch to one of these technologies at any stage in the course. All serverless function in this course are written in Node.js. If you stay on the basic track, you will only need to have the Node.js runtime and `npm` installed on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
 
 ## Preparation
 
 At the start of the course, take care of the following tasks:
 
-### Ensure Node.js is installed
+### Ensure Node.js and npm are installed
 
 Ensure that you have Node.js runtime version 14.x or higher installed on your machine. If you need to install it, follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, type `npm` in a shell, to check that it is available.
 
@@ -16,17 +16,17 @@ Next you will need this repo on you own machine. Run `git clone https://github.c
 
 ### Test your AWS login
 
-Last but not least, you will of course also need access to AWS. You have received an AWS Account ID, an IAM user name and a password from the trainers. navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
+Last but not least, you will of course also need access to AWS. You have received an AWS Account ID, an IAM user name and a password from the trainers. Navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
 
 ### Optional: Install the AWS CLI
 
 #### Installation
 
-If you want to also work on some of the optional extra topics of this course, you need to install the AWS CLI on your machine. follow the [AWS CLI installation instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and choose the installation method best suited for your operating system.
+If you want to also work on some of the optional extra topics of this course, you need to install the AWS CLI on your machine. Follow the [AWS CLI installation instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and choose the installation method best suited for your operating system.
 
 #### Authentication
 
-In order to authenticate your CLI you need to first create an access key by performing the following steps:
+In order to authenticate your CLI you first need to create an access key by performing the following steps:
 
 1. Log in to the AWS Console with your credentials
 1. Click on your name in the top right of the screen
@@ -42,7 +42,7 @@ In order to authenticate your CLI you need to first create an access key by perf
 
 ### Optional: Install Terraform
 
-Some optional extra topics also require Terraform, which you need to install on your machine. follow the [Terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli) and choose the installation method best suited for your operating system.
+Some optional extra topics also require Terraform, which you need to install on your machine. Follow the [Terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli) and choose the installation method best suited for your operating system.
 
 ## Level 0 - This is easy!
 
@@ -80,7 +80,7 @@ Work through the following steps:
 1. Create an execution role which will allow Lambda functions to access AWS resources:
 
    ```shell
-   aws iam create-role --role-name lambda-exec-cli-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
+   aws iam create-role --role-name lambda-exec-cli-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }] }'
    ```
 
 1. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
@@ -95,7 +95,7 @@ Work through the following steps:
    zip -j function.zip level-0/function/index.js
    ```
 
-1. Find out your Account ID by clicking your username in the top right corner.
+1. Find out your Account ID by clicking your username in the top right corner. Then set it as a variable in your shell.
 
    ```shell
    export ACCOUNT_ID=<your account ID>
@@ -130,25 +130,18 @@ Work through the following steps:
 <details>
   <summary>Still bored? Then try it with Terraform!</summary>
 
-1. Decide on a separate work directory for running the Terraform module
+1. Copy the Terraform module and the function code to a separate working directory
 
    ```shell
-   export WORKDIR=<your work directory>
-
-   ```
-
-1. Copy the Terraform module and the function code to your work directory
-
-   ```shell
-   mkdir $WORKDIR
-   cp level-0/advanced/terraform/* $WORKDIR
-   cp -r level-0/function $WORKDIR
+   mkdir my-tf-module
+   cp level-0/advanced/terraform/* my-tf-module
+   cp -r level-0/function my-tf-module
    ```
 
 1. Navigate to the Terraform module in your work directory
 
    ```shell
-   pushd $WORKDIR
+   pushd my-tf-module
    ```
 
 1. Initialize the Terraform module
@@ -265,23 +258,22 @@ To reach level 1, you'll need to learn about the following topics:
 <details>
   <summary>Still bored? Then try it with Terraform!</summary>
 
-1. Make sure your work directory and user variables are still set
+1. Make sure your user variable is still set
 
    ```shell
-   export WORKDIR=<your work directory>
    export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Navigate to the Terraform module
 
    ```shell
-   cp -r level-1/function $WORKDIR
+   cp -r level-1/function my-tf-module
    ```
 
 1. Navigate to your work directory
 
    ```shell
-   pushd $WORKDIR
+   pushd my-tf-module
    ```
 
 1. Apply the Terraform module again
@@ -418,14 +410,14 @@ We modify the function to read a joke from a joke table and change the function 
 1. Copy the new function code and the updated Terraform resources to your work directory
 
    ```shell
-   cp level-2/advanced/terraform/* $WORKDIR
-   cp -r level-2/function $WORKDIR
+   cp level-2/advanced/terraform/* my-tf-module
+   cp -r level-2/function my-tf-module
    ```
 
 1. Install the functions dependencies
 
    ```shell
-   pushd $WORKDIR/function
+   pushd my-tf-module/function
    npm install
    popd
    ```
@@ -433,7 +425,7 @@ We modify the function to read a joke from a joke table and change the function 
 1. Navigate to your Terraform module
 
    ```shell
-   pushd $WORKDIR
+   pushd my-tf-module
    ```
 
 1. Apply the Terraform module again
@@ -571,14 +563,14 @@ You will notice the following points:
 1. Copy the terraform module and the function code from level 3
 
    ```shell
-   cp -r level-3/advanced/terraform $WORKDIR
-   cp -r level-3/function $WORKDIR
+   cp -r level-3/advanced/terraform my-tf-module
+   cp -r level-3/function my-tf-module
    ```
 
 1. Install the functions dependencies
 
    ```shell
-   pushd $WORKDIR/function
+   pushd my-tf-module/function
    npm install
    popd
    ```
@@ -586,7 +578,7 @@ You will notice the following points:
 1. Navigate to your Terraform module
 
    ```shell
-   pushd $WORKDIR
+   pushd my-tf-module
    ```
 
 1. Apply the Terraform module again
@@ -689,23 +681,22 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 <details>
   <summary>Still bored? Then try it with Terraform!</summary>
 
-1. Make sure your work directory and user variables are still set
+1. Make sure your user variable is still set
 
    ```shell
-   export WORKDIR=<your work directory>
    export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Copy the updated function code to your working directory
 
    ```shell
-   cp -r level-4/function $WORKDIR
+   cp -r level-4/function my-tf-module
    ```
 
 1. Install the functions dependencies
 
    ```shell
-   pushd $WORKDIR/function
+   pushd my-tf-module/function
    npm install
    popd
    ```
@@ -713,7 +704,7 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Navigate to your Terraform module
 
    ```shell
-   pushd $WORKDIR
+   pushd my-tf-module
    ```
 
 1. Apply the Terraform module again
@@ -767,6 +758,70 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Trigger your sender function with a test event
 1. Head over to CloudWatch to examine the logs of the sender function. It has dispatched a message to the message queue.
 1. Examine the logs of the recipient function. It has been asynchronously triggered by the sender function via the message queue.
+
+### Already done? Try some of the bonus steps!
+
+<details>
+  <summary>Try it with the AWS CLI!</summary>
+
+1. Make sure the AWSUSER and ACCOUNT_ID environment variables are still set.
+
+   ```shell
+   export AWSUSER=<your AWS username>
+   export ACCOUNT_ID=<your account ID>
+   ```
+
+1. Create a deployment package for your new functions:
+
+   ```shell
+   cd ./level-5/function
+   npm install
+   zip -r function.zip ./*
+   ```
+
+1. Create two new roles:
+
+   ```shell
+   aws iam create-role --role-name sender-exec-cli-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }] }'
+   aws iam create-role --role-name recipient-exec-cli-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }] }'
+
+   ```
+
+1. Create two new functions:
+
+   ```shell
+   aws lambda create-function --function-name sender-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/sender-exec-cli-"$AWSUSER"
+   aws lambda create-function --function-name recipient-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/recipient-exec-cli-"$AWSUSER"
+   ```
+
+1. Create a new message queue
+
+   ```shell
+   aws sqs create-queue --queue-name messages-cli-"$AWSUSER"
+   ```
+
+1. Set the `SQS_QUEUE_URL` environment variable of the sender function to the queue's URL:
+
+   ```shell
+   export SQS_QUEUE_URL=$(aws sqs get-queue-url --queue-name messages-cli-"$AWSUSER" --query QueueUrl --output text)
+   aws lambda update-function-configuration --function-name sender-cli-"$AWSUSER" --environment "Variables={SQS_QUEUE_URL='$SQS_QUEUE_URL'}"
+   ```
+
+1. Give your sender function the permission to log and to post messages to the queue:
+
+   ```shell
+   aws iam attach-role-policy --role-name sender-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+   aws iam attach-role-policy --role-name sender-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/AmazonSQSFullAccess
+   ```
+
+1. Give your recipient function the permission to read messages from the queue:
+
+   ```shell
+   aws iam attach-role-policy --role-name recipient-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+   aws iam attach-role-policy --role-name recipient-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+   ```
+
+</details>
 
 ## Level 6 - Infra as Code ... duh!
 
