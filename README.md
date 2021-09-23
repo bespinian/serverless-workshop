@@ -849,9 +849,87 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 
 </details>
 
-## Level 6 - Infra as Code ... duh!
+## Level 6 - Infra as Code
+
+Infrastructure as code allows us to to manage the deployments of our functions and other cloud resources in a much more repeatable and testable way, bringing us to the next level.
+
+To deploy the function from level-4 and it's required resources, follow the steps below.
+You can also use this to deploy it to your own AWS account with very few commands.
+
+### Prerequisites
+
+For this step, need Terraform installed on your machine.
+Follow the [Terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli) and choose the installation method best suited for your operating system.
 
 ### Steps
+
+> Note!
+>
+> If you have done some extra work and already deployed the previous levels with Terraform, you may skip this level as it redeploys the code from level 4.
+
+1. Copy the Terraform module and the function code to a separate working directory
+
+   ```shell
+   mkdir my-tf-module
+   cp level-6/advanced/terraform/* my-tf-module
+   cp -r level-6/function my-tf-module
+   ```
+
+1. Navigate to the Terraform module in your work directory
+
+   ```shell
+   pushd my-tf-module
+   ```
+
+1. Initialize the Terraform module
+
+   ```shell
+   terraform init
+   ```
+
+1. Set your AWS user name as an environment variable for Terraform
+
+   ```shell
+   export TF_VAR_aws_user=<your AWS user name>
+   ```
+
+1. Copy the updated function code to your working directory
+
+   ```shell
+   cp -r level-6/function my-tf-module
+   ```
+
+1. Install the functions dependencies
+
+   ```shell
+   pushd my-tf-module/function
+   npm install
+   popd
+   ```
+
+1. Navigate to your Terraform module
+
+   ```shell
+   pushd my-tf-module
+   ```
+
+1. Apply the Terraform module again
+
+   ```shell
+   terraform apply
+   ```
+
+1. Invoke the function with a test event:
+
+   ```shell
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   ```
+
+1. Navigate back to the workshop repo
+
+   ```shell
+   popd
+   ```
 
 ## Level 7 - Testing ... duh!
 
