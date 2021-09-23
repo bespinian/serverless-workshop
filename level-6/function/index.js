@@ -10,7 +10,7 @@ const ddb = AWSXRay.captureAWSv3Client(new DynamoDBClient());
 
 exports.handler = async (event) => {
   const cmd = new GetItemCommand({
-    TableName: `jokes${tableSuffix}`,
+    TableName: `Jokes${tableSuffix}`,
     Key: { ID: { N: event.jokeID } },
   });
   const response = await ddb.send(cmd);
