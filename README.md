@@ -285,19 +285,19 @@ To reach level 1, you'll need to learn about the following topics:
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
+   aws lambda invoke --function-name my-function-tf-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
    ```
 
 1. Find the latest log stream for your function in CloudWatch:
 
    ```shell
-   aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER"
+   aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-tf-"$AWSUSER"
    ```
 
 1. Inspect the log events of the log stream:
 
    ```shell
-   aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" --log-stream-name=<name of latest log stream>
+   aws logs get-log-events --log-group-name=/aws/lambda/my-function-tf-"$AWSUSER" --log-stream-name=<name of latest log stream>
    ```
 
 1. Navigate back to the workshop repo
@@ -716,7 +716,7 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   aws lambda invoke --function-name my-function-tf-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 1. Navigate back to the workshop repo
@@ -849,6 +849,67 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 
 </details>
 
+<details>
+  <summary>Still bored? Then try it with Terraform!</summary>
+
+1. Make sure your user variable is still set
+
+   ```shell
+   export TF_VAR_aws_user=<your AWS user name>
+   ```
+
+1. Copy the updated function code to your working directory
+
+   ```shell
+   cp -r level-5/function my-tf-module
+   ```
+
+1. Install the functions dependencies
+
+   ```shell
+   pushd my-tf-module/function
+   npm install
+   popd
+   ```
+
+1. Navigate to your Terraform module
+
+   ```shell
+   pushd my-tf-module
+   ```
+
+1. Apply the Terraform module again
+
+   ```shell
+   terraform apply
+   ```
+
+1. Invoke the sender function with a test event:
+
+   ```shell
+   aws lambda invoke --function-name sender-tf-"$AWSUSER" --cli-binary-format raw-in-base64-out output.json --log-type Tail
+   ```
+
+1. Check out the logs of the sender function to see that the message has been sent:
+
+   ```shell
+   aws logs tail /aws/lambda/sender-tf-"$AWSUSER"
+   ```
+
+1. Check out the logs of the recipient function to see that it has been triggered and the message has been received:
+
+   ```shell
+   aws logs tail /aws/lambda/recipient-tf-"$AWSUSER"
+   ```
+
+1. Navigate back to the workshop repo
+
+   ```shell
+   popd
+   ```
+
+</details>
+
 ## Level 6 - Infra as Code
 
 Infrastructure as code allows us to to manage the deployments of our functions and other cloud resources in a much more repeatable and testable way, bringing us to the next level.
@@ -922,7 +983,7 @@ Follow the [Terraform installation instructions](https://learn.hashicorp.com/tut
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   aws lambda invoke --function-name my-function-tf-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 1. Navigate back to the workshop repo
