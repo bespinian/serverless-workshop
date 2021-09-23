@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "my_function" {
-  function_name = "my-function-terraform-${var.aws_user}"
+  function_name = "my-function-tf-${var.aws_user}"
 
   filename = data.archive_file.lambda_my_function.output_path
 
