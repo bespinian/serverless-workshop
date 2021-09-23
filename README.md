@@ -285,19 +285,19 @@ To reach level 1, you'll need to learn about the following topics:
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
+   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
    ```
 
 1. Find the latest log stream for your function in CloudWatch:
 
    ```shell
-   aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER"
+   aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-tf-"$TF_VAR_aws_user"
    ```
 
 1. Inspect the log events of the log stream:
 
    ```shell
-   aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" --log-stream-name=<name of latest log stream>
+   aws logs get-log-events --log-group-name=/aws/lambda/my-function-tf-"$TF_VAR_aws_user" --log-stream-name=<name of latest log stream>
    ```
 
 1. Navigate back to the workshop repo
@@ -353,7 +353,7 @@ We modify the function to read a joke from a joke table and change the function 
 1. Create a policy for access to the jokes table in DynamoDB
 
    ```shell
-   aws iam create-policy --policy-name read-jokes-db-table-cli-"$AWSUSER" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/jokes" }]}'
+   aws iam create-policy --policy-name read-jokes-db-table-cli-"$AWSUSER" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/Jokes" }]}'
    ```
 
 1. Attach the policy to your role
@@ -437,13 +437,13 @@ We modify the function to read a joke from a joke table and change the function 
 1. Switch on X-Ray tracing for your function
 
    ```shell
-   aws lambda update-function-configuration --function-name my-function-tf-"$AWSUSER" --tracing-config "Mode=Active"
+   aws lambda update-function-configuration --function-name my-function-tf-"$TF_VAR_aws_user" --tracing-config "Mode=Active"
    ```
 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$AWSUSER" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Inspect the traces that have been created during the last 20 minutes:
@@ -716,7 +716,7 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 1. Navigate back to the workshop repo
@@ -849,6 +849,67 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 
 </details>
 
+<details>
+  <summary>Still bored? Then try it with Terraform!</summary>
+
+1. Make sure your user variable is still set
+
+   ```shell
+   export TF_VAR_aws_user=<your AWS user name>
+   ```
+
+1. Copy the updated function code to your working directory
+
+   ```shell
+   cp -r level-5/function my-tf-module
+   ```
+
+1. Install the functions dependencies
+
+   ```shell
+   pushd my-tf-module/function
+   npm install
+   popd
+   ```
+
+1. Navigate to your Terraform module
+
+   ```shell
+   pushd my-tf-module
+   ```
+
+1. Apply the Terraform module again
+
+   ```shell
+   terraform apply
+   ```
+
+1. Invoke the sender function with a test event:
+
+   ```shell
+   aws lambda invoke --function-name sender-tf-"$TF_VAR_aws_user" --cli-binary-format raw-in-base64-out output.json --log-type Tail
+   ```
+
+1. Check out the logs of the sender function to see that the message has been sent:
+
+   ```shell
+   aws logs tail /aws/lambda/sender-tf-"$TF_VAR_aws_user"
+   ```
+
+1. Check out the logs of the recipient function to see that it has been triggered and the message has been received:
+
+   ```shell
+   aws logs tail /aws/lambda/recipient-tf-"$TF_VAR_aws_user"
+   ```
+
+1. Navigate back to the workshop repo
+
+   ```shell
+   popd
+   ```
+
+</details>
+
 ## Level 6 - Infra as Code
 
 Infrastructure as code allows us to to manage the deployments of our functions and other cloud resources in a much more repeatable and testable way, bringing us to the next level.
@@ -922,7 +983,7 @@ Follow the [Terraform installation instructions](https://learn.hashicorp.com/tut
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 1. Navigate back to the workshop repo
