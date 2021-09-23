@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "sender" {
   function_name = "sender-tf-${var.aws_user}"
 
-  filename = data.archive_file.my_function.output_path
+  filename = data.archive_file.functions.output_path
 
   runtime = "nodejs14.x"
   handler = "index.handler"
@@ -9,20 +9,13 @@ resource "aws_lambda_function" "sender" {
   tracing_config {
     mode = "Active"
   }
-  source_code_hash = data.archive_file.my_function.output_base64sha256
+  source_code_hash = data.archive_file.functions.output_base64sha256
 
   role = aws_iam_role.sender_exec.arn
 }
 
-data "archive_file" "my_function" {
-  type = "zip"
-
-  source_dir  = "${path.module}/function"
-  output_path = "${path.module}/function.zip"
-}
-
-resource "aws_cloudwatch_log_group" "my_function" {
-  name = "/aws/lambda/${aws_lambda_function.my_function.function_name}"
+resource "aws_cloudwatch_log_group" "sender_function" {
+  name = "/aws/lambda/${aws_lambda_function.sender.function_name}"
 
   retention_in_days = 30
 }
@@ -49,10 +42,10 @@ resource "aws_iam_role_policy_attachment" "sender_basic_exec" {
 
 resource "aws_iam_role_policy_attachment" "sender_tracing_execution" {
   role       = aws_iam_role.sender_exec.name
-  policy_arn = data.aws_iam_policy.xray_write_access.arn
+  policy_arn = data.aws_iam_policy.sender_xray_write_access.arn
 }
 
-data "aws_iam_policy" "xray_write_access" {
+data "aws_iam_policy" "sender_xray_write_access" {
   name = "AWSXrayWriteOnlyAccess"
 }
 
@@ -63,28 +56,4 @@ resource "aws_iam_role_policy_attachment" "sender_read_from_queue" {
 
 data "aws_iam_policy" "write_messages" {
   name = "AmazonSQSFullAccess"
-}
-
-resource "aws_iam_policy" "read_jokes_db_table" {
-  name   = "read-jokes-db-table-tf-${var.aws_user}"
-  policy = data.aws_iam_policy_document.access_jokes_table.json
-}
-
-data "aws_iam_policy_document" "access_jokes_table" {
-  statement {
-    sid    = "ReadWriteTable"
-    effect = "Allow"
-    actions = [
-      "dynamodb:Scan",
-      "dynamodb:Query",
-      "dynamodb:BatchGetItem",
-      "dynamodb:GetItem",
-    ]
-    resources = [aws_dynamodb_table.jokes.arn]
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "dynamodb_policy" {
-  role       = aws_iam_role.sender_exec.name
-  policy_arn = aws_iam_policy.read_jokes_db_table.arn
 }

@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "recipient" {
   function_name = "recipient-tf-${var.aws_user}"
 
-  filename = data.archive_file.my_function.output_path
+  filename = data.archive_file.functions.output_path
 
   runtime = "nodejs14.x"
   handler = "index.handler"
@@ -9,20 +9,20 @@ resource "aws_lambda_function" "recipient" {
   tracing_config {
     mode = "Active"
   }
-  source_code_hash = data.archive_file.my_function.output_base64sha256
+  source_code_hash = data.archive_file.functions.output_base64sha256
 
   role = aws_iam_role.recipient_exec.arn
 }
 
-data "archive_file" "my_function" {
+data "archive_file" "functions" {
   type = "zip"
 
   source_dir  = "${path.module}/function"
   output_path = "${path.module}/function.zip"
 }
 
-resource "aws_cloudwatch_log_group" "my_function" {
-  name = "/aws/lambda/${aws_lambda_function.my_function.function_name}"
+resource "aws_cloudwatch_log_group" "recipient_function" {
+  name = "/aws/lambda/${aws_lambda_function.recipient.function_name}"
 
   retention_in_days = 30
 }
@@ -47,7 +47,7 @@ resource "aws_iam_role_policy_attachment" "recipient_basic_exec" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "sender_tracing_execution" {
+resource "aws_iam_role_policy_attachment" "recipient_tracing_execution" {
   role       = aws_iam_role.recipient_exec.name
   policy_arn = data.aws_iam_policy.xray_write_access.arn
 }
