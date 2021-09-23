@@ -353,7 +353,7 @@ We modify the function to read a joke from a joke table and change the function 
 1. Create a policy for access to the jokes table in DynamoDB
 
    ```shell
-   aws iam create-policy --policy-name read-jokes-db-table-cli-"$AWSUSER" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/jokes" }]}'
+   aws iam create-policy --policy-name read-jokes-db-table-cli-"$AWSUSER" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/Jokes" }]}'
    ```
 
 1. Attach the policy to your role
