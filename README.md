@@ -53,7 +53,7 @@ In this level, you will learn how to create a first simple function in AWS Lambd
 Work through the following steps:
 
 1. Go to the [AWS Lambda GUI](https://console.aws.amazon.com/lambda)
-1. Choose "Europe (Frankfurt) eu-central-1" as the region in the top right corner
+1. Choose **Europe (Frankfurt) eu-central-1** as the region in the top right corner
 1. Click on `Create function`
 1. Choose `my-function-AWSUSER` as the function name, replacing `AWSUSER` with your user name
 1. Choose `Node.js 14.x` as the runtime
