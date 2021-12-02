@@ -12,7 +12,7 @@ Ensure that you have Node.js runtime version 14.x or higher installed on your ma
 
 ### Clone this repo
 
-Next you will need this repo on you own machine. Run `git clone https://github.com/bespinian/serverless-workshop.git` to clone this repo with all its steps
+Next you will need this repo on your own machine. Run `git clone https://github.com/bespinian/serverless-workshop.git` to clone this repo with all its steps
 
 ### Test your AWS login
 
@@ -62,7 +62,7 @@ Work through the following steps:
 1. Copy the code from [./level-0/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-0/function/index.js) and paste it into the code editor field
 1. Press the `Deploy` button
 1. In the `Configuration` tab under `Environment variables`, set a variable called `NAME` to the name of a person you like
-1. In the `Test` tab, Press the `Test` button and create a test event called `test`
+1. In the `Test` tab, press the `Test` button and create a test event called `test`
 1. Press the `Test` button again to run the test
 1. Observe the test output
 
@@ -463,8 +463,7 @@ We modify the function to read a joke from a joke table and change the function 
 ## Level 3 - Timin' it!
 
 To reach this level, we'll make sure our function terminates in an orderly fashion within the timeout limit it is configured with.
-This means, aborting IO operations or long running calculations when the function time runs out, or at least return to your program flow to handle the return values.
-To do this, .  
+This means, aborting IO operations or long-running calculations when the function time runs out, or at least return to your program flow to handle the return values.
 The AWS Lambda frameworks allow us to poll how much time is still left in a function call, which simplifies this.
 
 Before you deploy the improved function to lambda, inspect the provided code.
@@ -477,7 +476,7 @@ You will notice the following points:
 > Note!
 >
 > Some AWS resources support the usage of an [AbortController](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/interfaces/_aws_sdk_types.abortcontroller-1.html) to terminate those actions.
-> When doing IO operations using resources that do not support it or doing long running computations, make sure you set timeouts or implement a timeout check yourself.
+> When doing IO operations using resources that do not support it or doing long-running computations, make sure you set timeouts or implement a timeout check yourself.
 
 ### Steps
 
@@ -621,7 +620,7 @@ You will notice the following points:
 
 ## Level 4 - Optimized Cold Starts!
 
-To reach level 4, you will need to reduce the cold start time of your function. Warmers are usually not recommended but you can try moving initialization code outside of your handler.
+To reach level 4, you will need to reduce the cold start time of your function. Warmers are usually not recommended, but you can try moving initialization code outside your handler.
 
 ### Steps
 
@@ -733,7 +732,7 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 
 ### Steps
 
-1. Navigate to to the level 5 code and install the dependencies:
+1. Navigate to the level 5 code and install the dependencies:
 
    ```shell
    cd level-5/function
@@ -749,7 +748,7 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. In the Lambda GUI, create a new function called `sender-AWSUSER` (replace AWSUSER with your username) and leave all the defaults
 1. Create another function called `recipient-AWSUSER` (replace AWSUSER with your username) and leave all the defaults
 1. Upload `function.zip` to both functions and inspect the file. It defines and exports two different handlers. The first one sends an event to an SQS queue and the second one receives it.
-1. Scroll down to `Runtime settings` and change the Handler to `index.senderHandler` for the sender function and to `index.recipientHandler` for the recipient function. For Node.js, the "index" part refers to the file name and the "handler" part to the name of the export. So we can have multiple functions in the same source code.
+1. Scroll down to `Runtime settings` and change the "Handler" to `index.senderHandler` for the sender function and to `index.recipientHandler` for the recipient function. For Node.js, the "index" part refers to the file name and the "handler" part to the name of the export. So we can have multiple functions in the same source code.
 1. Head over to the [SQS GUI](https://eu-central-1.console.aws.amazon.com/sqs/v2/home) and create a new queue called `messages-AWSUSER` replacing AWSUSER with your user name and leave all the defaults. Then copy the URL of your newly created function to the clipboard. The URL can be found in the "Details" of the queue.
 1. Set the `SQS_QUEUE_URL` environment variable to the name of the queue you have just created for the sender function
 1. Give the sender function the permission to send messages to the queue by clicking its role name in the "Configuration" tab under "Permissions". Then attach the policy called `AmazonSQSFullAccess`.
@@ -912,9 +911,9 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 
 ## Level 6 - Infra as Code
 
-Infrastructure as code allows us to to manage the deployments of our functions and other cloud resources in a much more repeatable and testable way, bringing us to the next level.
+Infrastructure as code allows us to manage the deployments of our functions and other cloud resources in a much more repeatable and testable way, bringing us to the next level.
 
-To deploy the function from level-4 and it's required resources, follow the steps below.
+To deploy the function from level-4, and it's required resources, follow the steps below.
 You can also use this to deploy it to your own AWS account with very few commands.
 
 ### Prerequisites
@@ -1001,7 +1000,7 @@ To reach level 7 you need to know how to
 
 ### Steps
 
-1. Navigate to to the unit test example and install the dependencies:
+1. Navigate to the unit test example and install the dependencies:
 
    ```shell
    pushd level-7/unit-tests
