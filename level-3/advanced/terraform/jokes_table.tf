@@ -17,7 +17,7 @@ resource "aws_dynamodb_table_item" "joke_1" {
   item = <<ITEM
 {
   "ID": {"N": "1"},
-  "Text": {"S": "A biologist, a chemist and a statistician are out hunting, The biologist shoots at a deer and misses five feet to the left. The chemist shoots at the same deer and misses five feet to the right. The statistician shouts, 'We got him!'"}
+  "Text": {"S": "A biologist, a chemist, and a statistician are out hunting. The biologist shoots at a deer and misses five feet to the left. The chemist shoots at the same deer and misses five feet to the right. The statistician shouts, 'We got him!'"}
 }
 ITEM
 }
