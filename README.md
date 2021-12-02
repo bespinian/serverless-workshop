@@ -1133,6 +1133,103 @@ To reach level 7 you need to know how to
    }
    ```
 
+## Level 8 - Lockdown!
+
+When you understand that functions can be assigned just the set of privileges that they need you have reached level 8. In order to do so you will observe an example of a function which is trying to write to the jokes table but does not have permission to do so.
+
+### Steps
+
+1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
+1. Click on `Functions` in the left navigation
+1. Choose the function `my-function-AWSUSER`, which you updated in level 4
+1. Run `npm install` in the folder [./level-8/function](https://github.com/bespinian/serverless-workshop/tree/main/level-8/function)
+1. Create a zip file from the folder [./level-8/function](https://github.com/bespinian/serverless-workshop/tree/main/level-8/function) and upload it to the function
+1. Press the `Deploy` button
+1. Press the `Test` button and create a test event called `joke`
+1. Paste the following JSON object to the editor field
+
+   ```json
+   {
+     "jokeID": "1"
+   }
+   ```
+
+1. Press the `Test` button again to run the test
+1. Observe the failure in the test output. This is because your function has read only access to the `Jokes` table, but is secretly trying to write to it.
+
+### Already done? Try some of the bonus steps!
+
+<details>
+  <summary>Try it with the AWS CLI!</summary>
+
+1. Make sure the AWSUSER and ACCOUNT_ID environment variables are still set.
+
+   ```shell
+   export AWSUSER=<your AWS username>
+   export ACCOUNT_ID=<your account ID>
+   ```
+
+1. Create a deployment package for your new function:
+
+   ```shell
+   pushd ./level-8/function
+   npm install
+   zip -r function.zip ./*
+   popd
+   ```
+
+1. Update the function with the new code:
+
+   ```shell
+   aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://level-8/function/function.zip
+   ```
+
+1. Invoke the function with a test event:
+
+   ```shell
+   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   ```
+
+</details>
+
+<details>
+  <summary>Still bored? Then try it with Terraform!</summary>
+
+1. Make sure your user variable is still set
+
+   ```shell
+   export TF_VAR_aws_user=<your AWS user name>
+   ```
+
+1. Copy the updated function code to your working directory
+
+   ```shell
+   cp -r level-8/function my-tf-module
+   ```
+
+1. Install the functions dependencies
+
+   ```shell
+   pushd my-tf-module/function
+   npm install
+   popd
+   ```
+
+1. Navigate to your Terraform module
+
+   ```shell
+   pushd my-tf-module
+   ```
+
+1. Apply the Terraform module again
+
+   ```shell
+   terraform apply
+   ```
+
+
+</details>
+
 ## Level 9 - Do the Canary
 
 To reach level 9, we have to correctly deploy our app using a canary deployment. These can help greatly to reduce errors in production. In this section, you will do a rolling deployment that gradually increases the load to the new version and rolls back on errors. To do so, run through the following steps:
