@@ -19,7 +19,7 @@ exports.handler = async (event, context) => {
   );
 
   const cmd = new GetItemCommand({
-    TableName: `Jokes${tableSuffix}`,
+    TableName: `jokes${tableSuffix}`,
     Key: { ID: { N: event.jokeID } },
   });
   responsePromise = ddb.send(cmd);
