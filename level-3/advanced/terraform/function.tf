@@ -67,7 +67,7 @@ data "aws_iam_policy" "xray_write_access" {
 }
 
 resource "aws_iam_policy" "read_jokes_db_table" {
-  name   = "read-jokes-db-table"
+  name   = "read-jokes-db-table-tf-${var.aws_user}"
   policy = data.aws_iam_policy_document.access_jokes_table.json
 }
 
