@@ -66,6 +66,27 @@ Work through the following steps:
 1. Press the `Test` button again to run the test
 1. Observe the test output
 
+### Add an HTTP Trigger
+
+Lambda functions support various Triggers.
+Some of the most commonly used ones are:
+
+- HTTP Trigger using the API Gateway
+- Message Queue triggers from Amazon MQ or SQS
+- S3 Events such as object creation or deletion events in a Bucket
+- Apache Kafka Events
+
+Work through the following steps to expose your function on the Internet via the API Gateway.
+
+1. In the Functional overview at the top, click `Add trigger`
+1. Select `API Gateway`
+1. For API, select `Create an API`
+1. Select `HTTP API` as the API Type
+1. Select `Open`, in Security
+1. Click `Add`
+1. You should now see the new Trigger and the URL to access it.
+   Click the link to see the response in your browser.
+
 ### Already done? Try some of the bonus steps!
 
 <details>
@@ -125,6 +146,48 @@ Work through the following steps:
    aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
+1. Create an API on the API gateway
+
+   ```shell
+   aws apigatewayv2 --profile personal create-api --name my-api-gw-cli-"$AWSUSER" --protocol-type HTTP
+   ```
+
+1. Set the variable $API_ID to the ID that was returned by the command above:
+
+   ```shell
+   export API_ID=<the API ID>
+   ```
+
+1. Create an integration on the API gateway pointing to your Lambda function:
+
+   ```shell
+   aws apigatewayv2 --profile personal create-integration --api-id "$API_ID" --integration-type AWS_PROXY --integration-uri arn:aws:lambda:eu-central-1:"$ACCOUNT_ID":function:my-function-cli-"$AWSUSER" --payload-format-version
+   2.0
+   ```
+
+1. Set the INTEGRATION_ID variable to the value of `IntegrationId` from the response:
+
+   ```shell
+   export INTEGRATION_ID=<the integration id>
+   ```
+
+1. Create a route pointing to your integration:
+
+   ```shell
+   aws apigatewayv2 --profile personal create-route --api-id "$API_ID" --route-key "ANY /my-function" --target integrations/"$INTEGRATION_ID" --authorization-type NONE --no-api-key-required
+   ```
+
+1. Create a stage that deploys the configuration:
+
+   ```shell
+   aws apigatewayv2 --profile personal create-stage --api-id "$API_ID" --auto-deploy --stage-name default
+   ```
+
+1. Allow the API gateway to access the lambda function:
+   ```shell
+   aws lambda add-permission --profile personal --function-name my-function-cli-"$AWSUSER" --statement-id apigateway-get --action lambda:InvokeFunction --principal apigateway.amazonaws.com --source-arn arn:aws:execute-api:eu-central-1:"$ACCOUNT_ID":"$API_ID"/*/*/my-function
+   ```
+
 </details>
 
 <details>
@@ -162,10 +225,17 @@ Work through the following steps:
    terraform apply
    ```
 
-1. Invoke the function
+1. Invoke the function via the AWS CLI
 
    ```shell
    aws lambda invoke --function-name=$(terraform output -raw function_name) output.json
+   ```
+
+1. Invoke the function via HTTP.
+   Access the `invoke_url` that's returned by `terraform apply` either through your browser or through curl:
+
+   ```shell
+   curl <invoke_url>
    ```
 
 1. Navigate back to the workshop repo
@@ -331,6 +401,10 @@ We modify the function to read a joke from a joke table and change the function 
 1. In the `Configuration` tab of the lambda function, select the `Monitoring and operations tools`, click edit and enable `Active tracing` in the `AWS X-Ray` section.
 1. On the functions `Test` tab create a test event with the following payload `{ "jokeID": "1" }` and click the `Test` button. You should see the joke loaded from the database in the response.
 1. On the `Monitor` tab, select the `Traces` menu option and inspect the service map as well as the individual traces. Click on one of the traces to get familiar of what info you have available, such as how long the request to query the DynamoDB took.
+1. To call your function via HTTP, you must now provide a payload:
+   ```shell
+   curl -v -X POST <api-gateway-url> --data '{"jokeID":"1"}'
+   ```
 
 ### Already done? Try some of the bonus steps!
 
