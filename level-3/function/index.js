@@ -18,10 +18,18 @@ exports.handler = async (event, context) => {
     )
   );
 
+  let jokeID = event.jokeID;
+  if (event.body) {
+    const buff = Buffer.from(event.body, "base64");
+    const body = JSON.parse(buff.toString("utf-8"));
+
+    jokeID = body.jokeID;
+  }
   const cmd = new GetItemCommand({
     TableName: `jokes${tableSuffix}`,
-    Key: { ID: { N: event.jokeID } },
+    Key: { ID: { N: jokeID } },
   });
+
   responsePromise = ddb.send(cmd);
 
   try {

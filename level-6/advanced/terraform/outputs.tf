@@ -9,3 +9,8 @@ output "table_name" {
 
   value = aws_dynamodb_table.jokes.name
 }
+
+output "invoke_url" {
+  description = "URL where the Lambda can be accessed through HTTP"
+  value       = aws_apigatewayv2_stage.main.invoke_url
+}
