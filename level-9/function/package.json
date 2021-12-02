@@ -1,0 +1,22 @@
+{
+  "name": "level-4",
+  "description": "Level 4 of the Serverless Workshop",
+  "author": "bespinian",
+  "homepage": "https://github.com/bespinian/serverless-workshop#readme",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.32.0",
+    "aws-xray-sdk-core": "^3.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bespinian/serverless-workshop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bespinian/serverless-workshop/issues"
+  }
+}

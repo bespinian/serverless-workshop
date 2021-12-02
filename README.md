@@ -101,13 +101,13 @@ Work through the following steps to expose your function on the Internet via the
 1. Create an execution role which will allow Lambda functions to access AWS resources:
 
    ```shell
-   aws iam create-role --role-name lambda-exec-cli-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }] }'
+   aws iam create-role --role-name "lambda-exec-cli-${AWSUSER}" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }] }'
    ```
 
 1. Grant certain permissions to your newly created role. The managed policy `AWSLambdaBasicExecutionRole` has the permissions needed to write logs to CloudWatch:
 
    ```shell
-   aws iam attach-role-policy --role-name lambda-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+   aws iam attach-role-policy --role-name "lambda-exec-cli-${AWSUSER}" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
    ```
 
 1. Create a deployment package for your function:
@@ -125,25 +125,25 @@ Work through the following steps to expose your function on the Internet via the
 1. Create the function:
 
    ```shell
-    aws lambda create-function --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role arn:aws:iam::"$ACCOUNT_ID":role/lambda-exec-cli-"$AWSUSER"
+    aws lambda create-function --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role "arn:aws:iam::${ACCOUNT_ID}:role/lambda-exec-cli-${AWSUSER}"
    ```
 
 1. Set the `NAME` environment variable to your user name:
 
    ```shell
-   aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --environment "Variables={NAME='$AWSUSER'}"
+   aws lambda update-function-configuration --function-name "my-function-cli-${AWSUSER}" --environment "Variables={NAME='$AWSUSER'}"
    ```
 
 1. Invoke the function:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --log-type Tail
+   aws lambda invoke --function-name "my-function-cli-${AWSUSER}" output.json --log-type Tail
    ```
 
 1. Invoke the function and decode the logs:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name "my-function-cli-${AWSUSER}" output.json --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Create an API on the API gateway
@@ -302,25 +302,25 @@ To reach level 1, you'll need to learn about the following topics:
 1. Update the function with the new code:
 
    ```shell
-   aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://function.zip
+   aws lambda update-function-code --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://function.zip
    ```
 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
+   aws lambda invoke --function-name "my-function-cli-${AWSUSER}" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
    ```
 
 1. Find the latest log stream for your function in CloudWatch:
 
    ```shell
-   aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER"
+   aws logs describe-log-streams --log-group-name "/aws/lambda/my-function-cli-${AWSUSER}"
    ```
 
 1. Inspect the log events of the log stream. You might have to escape some characters in the value passed in `--log-stream-name`
 
    ```shell
-   aws logs get-log-events --log-group-name=/aws/lambda/my-function-cli-"$AWSUSER" --log-stream-name=<name of latest log stream>
+   aws logs get-log-events --log-group-name "/aws/lambda/my-function-cli-${AWSUSER}" --log-stream-name=<name of latest log stream>
    ```
 
 </details>
@@ -355,19 +355,19 @@ To reach level 1, you'll need to learn about the following topics:
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
+   aws lambda invoke --function-name "my-function-tf-${TF_VAR_aws_user}" --cli-binary-format raw-in-base64-out --payload '{ "name": "Bob" }' output.json --log-type Tail
    ```
 
 1. Find the latest log stream for your function in CloudWatch:
 
    ```shell
-   aws logs describe-log-streams --log-group-name=/aws/lambda/my-function-tf-"$TF_VAR_aws_user"
+   aws logs describe-log-streams --log-group-name "/aws/lambda/my-function-tf-${TF_VAR_aws_user}"
    ```
 
 1. Inspect the log events of the log stream:
 
    ```shell
-   aws logs get-log-events --log-group-name=/aws/lambda/my-function-tf-"$TF_VAR_aws_user" --log-stream-name=<name of latest log stream>
+   aws logs get-log-events --log-group-name "/aws/lambda/my-function-tf-${TF_VAR_aws_user}" --log-stream-name=<name of latest log stream>
    ```
 
 1. Navigate back to the workshop repo
@@ -421,19 +421,19 @@ We modify the function to read a joke from a joke table and change the function 
 1. Attach a policy for X-Ray access to your role
 
    ```shell
-   aws iam attach-role-policy --role-name lambda-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+   aws iam attach-role-policy --role-name "lambda-exec-cli-${AWSUSER}" --policy-arn arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
    ```
 
 1. Create a policy for access to the jokes table in DynamoDB
 
    ```shell
-   aws iam create-policy --policy-name read-jokes-db-table-cli-"$AWSUSER" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/jokes" }]}'
+   aws iam create-policy --policy-name "read-jokes-db-table-cli-${AWSUSER}" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/jokes" }]}'
    ```
 
 1. Attach the policy to your role
 
    ```shell
-   aws iam attach-role-policy --role-name lambda-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::"$ACCOUNT_ID":policy/read-jokes-db-table-cli-"$AWSUSER"
+   aws iam attach-role-policy --role-name "lambda-exec-cli-${AWSUSER}" --policy-arn "arn:aws:iam::${ACCOUNT_ID}:policy/read-jokes-db-table-cli-${AWSUSER}"
    ```
 
 1. Create a deployment package for your new function:
@@ -448,19 +448,19 @@ We modify the function to read a joke from a joke table and change the function 
 1. Update the function with the new code:
 
    ```shell
-   aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://level-2/function/function.zip
+   aws lambda update-function-code --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://level-2/function/function.zip
    ```
 
 1. Switch on X-Ray tracing for your function
 
    ```shell
-   aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --tracing-config "Mode=Active"
+   aws lambda update-function-configuration --function-name "my-function-cli-${AWSUSER}" --tracing-config "Mode=Active"
    ```
 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name "my-function-cli-${AWSUSER}" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Inspect the traces that have been created during the last 20 minutes:
@@ -477,7 +477,6 @@ We modify the function to read a joke from a joke table and change the function 
 1. Make sure your work directory and user variables are still set
 
    ```shell
-   export WORKDIR=<your work directory>
    export TF_VAR_aws_user=<your AWS user name>
    ```
 
@@ -511,13 +510,13 @@ We modify the function to read a joke from a joke table and change the function 
 1. Switch on X-Ray tracing for your function
 
    ```shell
-   aws lambda update-function-configuration --function-name my-function-tf-"$TF_VAR_aws_user" --tracing-config "Mode=Active"
+   aws lambda update-function-configuration --function-name "my-function-tf-${TF_VAR_aws_user}" --tracing-config "Mode=Active"
    ```
 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name "my-function-tf-${TF_VAR_aws_user}" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Inspect the traces that have been created during the last 20 minutes:
@@ -590,19 +589,19 @@ You will notice the following points:
 1. Update the function with the new code:
 
    ```shell
-   aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://level-3/function/function.zip
+   aws lambda update-function-code --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://level-3/function/function.zip
    ```
 
 1. Update the function's timeout setting to 1 second:
 
    ```shell
-   aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --timeout 1
+   aws lambda update-function-configuration --function-name "my-function-cli-${AWSUSER}" --timeout 1
    ```
 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name "my-function-cli-${AWSUSER}" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Note that the function succeeds, but in the output tells you, that it ran into a timeout.
@@ -610,13 +609,13 @@ You will notice the following points:
 1. Update the function's timeout setting to 2 seconds:
 
    ```shell
-   aws lambda update-function-configuration --function-name my-function-cli-"$AWSUSER" --timeout 2
+   aws lambda update-function-configuration --function-name "my-function-cli-${AWSUSER}" --timeout 2
    ```
 
 1. Invoke the function again with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name "my-function-cli-${AWSUSER}" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
 1. Note that the function succeeds and returns the joke.
@@ -629,7 +628,6 @@ You will notice the following points:
 1. Make sure your work directory and user variables are still set
 
    ```shell
-   export WORKDIR=<your work directory>
    export TF_VAR_aws_user=<your AWS user name>
    ```
 
@@ -663,7 +661,7 @@ You will notice the following points:
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name "my-function-tf-${TF_VAR_aws_user}" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
    Note that the function returns but the response contains an error message because it ran into a timeout.
@@ -679,7 +677,7 @@ You will notice the following points:
 1. Invoke the function with another test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
+   aws lambda invoke --function-name "my-function-tf-${TF_VAR_aws_user}" output.json --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' --log-type Tail --query 'LogResult' --output text |  base64 -d
    ```
 
    Note that the function returns successfully and the response contains the joke loaded from the database.
@@ -740,13 +738,13 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Update the function with the new code:
 
    ```shell
-   aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://level-4/function/function.zip
+   aws lambda update-function-code --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://level-4/function/function.zip
    ```
 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   aws lambda invoke --function-name "my-function-cli-${AWSUSER}" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 </details>
@@ -789,7 +787,7 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   aws lambda invoke --function-name "my-function-tf-${TF_VAR_aws_user}" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 1. Navigate back to the workshop repo
@@ -854,70 +852,70 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Create two new roles:
 
    ```shell
-   aws iam create-role --role-name sender-exec-cli-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }] }'
-   aws iam create-role --role-name recipient-exec-cli-"$AWSUSER" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }] }'
+   aws iam create-role --role-name "sender-exec-cli-${AWSUSER}" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }] }'
+   aws iam create-role --role-name "recipient-exec-cli-${AWSUSER}" --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" }] }'
 
    ```
 
 1. Create two new functions:
 
    ```shell
-   export SENDER_ROLE_ARN=$(aws iam get-role --role-name sender-exec-cli-"$AWSUSER" --query Role.Arn --output text)
-   aws lambda create-function --function-name sender-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs14.x --role "$SENDER_ROLE_ARN"
-   export RECIPIENT_ROLE_ARN=$(aws iam get-role --role-name recipient-exec-cli-"$AWSUSER" --query Role.Arn --output text)
-   aws lambda create-function --function-name recipient-cli-"$AWSUSER" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs14.x --role "$RECIPIENT_ROLE_ARN"
+   export SENDER_ROLE_ARN=$(aws iam get-role --role-name "sender-exec-cli-${AWSUSER}" --query Role.Arn --output text)
+   aws lambda create-function --function-name "sender-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs14.x --role "$SENDER_ROLE_ARN"
+   export RECIPIENT_ROLE_ARN=$(aws iam get-role --role-name "recipient-exec-cli-${AWSUSER}" --query Role.Arn --output text)
+   aws lambda create-function --function-name "recipient-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs14.x --role "$RECIPIENT_ROLE_ARN"
    ```
 
 1. Create a new message queue
 
    ```shell
-   aws sqs create-queue --queue-name messages-cli-"$AWSUSER"
+   aws sqs create-queue --queue-name "messages-cli-${AWSUSER}"
    ```
 
 1. Set the `SQS_QUEUE_URL` environment variable of the sender function to the queue's URL:
 
    ```shell
-   export SQS_QUEUE_URL=$(aws sqs get-queue-url --queue-name messages-cli-"$AWSUSER" --query QueueUrl --output text)
-   aws lambda update-function-configuration --function-name sender-cli-"$AWSUSER" --environment "Variables={SQS_QUEUE_URL='$SQS_QUEUE_URL'}"
+   export SQS_QUEUE_URL=$(aws sqs get-queue-url --queue-name "messages-cli-${AWSUSER}" --query QueueUrl --output text)
+   aws lambda update-function-configuration --function-name "sender-cli-${AWSUSER}" --environment "Variables={SQS_QUEUE_URL='$SQS_QUEUE_URL'}"
    ```
 
 1. Give your sender function the permission to log and to post messages to the queue:
 
    ```shell
-   aws iam attach-role-policy --role-name sender-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-   aws iam attach-role-policy --role-name sender-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/AmazonSQSFullAccess
+   aws iam attach-role-policy --role-name "sender-exec-cli-${AWSUSER}" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+   aws iam attach-role-policy --role-name "sender-exec-cli-${AWSUSER}" --policy-arn arn:aws:iam::aws:policy/AmazonSQSFullAccess
    ```
 
 1. Give your recipient function the permission to log and read messages from the queue:
 
    ```shell
-   aws iam attach-role-policy --role-name recipient-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-   aws iam attach-role-policy --role-name recipient-exec-cli-"$AWSUSER" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+   aws iam attach-role-policy --role-name "recipient-exec-cli-${AWSUSER}" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+   aws iam attach-role-policy --role-name "recipient-exec-cli-${AWSUSER}" --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
    ```
 
 1. Set the SQS queue as a trigger for the recipient function:
 
    ```shell
    export SQS_QUEUE_ARN=$(aws sqs get-queue-attributes --queue-url "$SQS_QUEUE_URL" --attribute-names QueueArn --query Attributes.QueueArn --output text)
-   aws lambda create-event-source-mapping --function-name recipient-cli-"$AWSUSER" --event-source-arn "$SQS_QUEUE_ARN"
+   aws lambda create-event-source-mapping --function-name "recipient-cli-${AWSUSER}" --event-source-arn "$SQS_QUEUE_ARN"
    ```
 
 1. Invoke the sender function:
 
    ```shell
-   aws lambda invoke --function-name sender-cli-"$AWSUSER" output.json --log-type Tail
+   aws lambda invoke --function-name "sender-cli-${AWSUSER}" output.json --log-type Tail
    ```
 
 1. Check out the logs of the sender function to see that the message has been sent:
 
    ```shell
-   aws logs tail /aws/lambda/sender-cli-"$AWSUSER"
+   aws logs tail "/aws/lambda/sender-cli-${AWSUSER}"
    ```
 
 1. Check out the logs of the recipient function to see that it has been triggered and the message has been received:
 
    ```shell
-   aws logs tail /aws/lambda/recipient-cli-"$AWSUSER"
+   aws logs tail "/aws/lambda/recipient-cli-${AWSUSER}"
    ```
 
 </details>
@@ -960,19 +958,19 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Invoke the sender function with a test event:
 
    ```shell
-   aws lambda invoke --function-name sender-tf-"$TF_VAR_aws_user" --cli-binary-format raw-in-base64-out output.json --log-type Tail
+   aws lambda invoke --function-name "sender-tf-${TF_VAR_aws_user}" --cli-binary-format raw-in-base64-out output.json --log-type Tail
    ```
 
 1. Check out the logs of the sender function to see that the message has been sent:
 
    ```shell
-   aws logs tail /aws/lambda/sender-tf-"$TF_VAR_aws_user"
+   aws logs tail "/aws/lambda/sender-tf-${TF_VAR_aws_user}"
    ```
 
 1. Check out the logs of the recipient function to see that it has been triggered and the message has been received:
 
    ```shell
-   aws logs tail /aws/lambda/recipient-tf-"$TF_VAR_aws_user"
+   aws logs tail "/aws/lambda/recipient-tf-${TF_VAR_aws_user}"
    ```
 
 1. Navigate back to the workshop repo
@@ -1056,7 +1054,7 @@ Follow the [Terraform installation instructions](https://learn.hashicorp.com/tut
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-tf-"$TF_VAR_aws_user" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   aws lambda invoke --function-name "my-function-tf-${TF_VAR_aws_user}" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 1. Navigate back to the workshop repo
@@ -1134,3 +1132,135 @@ To reach level 7 you need to know how to
      "name": "Bob"
    }
    ```
+
+## Level 9 - Do the Canary
+
+To reach level 9, we have to correctly deploy our app using a canary deployment. These can help greatly to reduce errors in production. In this section, you will do a rolling deployment that gradually increases the load to the new version and rolls back on errors. To do so, run through the following steps:
+
+1. Go to the [AWS Lambda UI](https://console.aws.amazon.com/lambda)
+1. Click on `Functions` in the left navigation
+1. Choose the function `my-function-AWSUSER`, which you updated in level 4
+1. Run `npm install` in the folder [./level-9/function](https://github.com/bespinian/serverless-workshop/tree/main/level-9/function)
+1. Create a zip file from the folder [./level-9/function](https://github.com/bespinian/serverless-workshop/tree/main/level-9/function) and upload it to the function
+1. Press the `Deploy` button
+1. Go to the "Versions" tab and click "Publish a new version", then click "Publish"
+1. Click "Create alias" and call it "production"
+1. Change something in the function code (e.g. add a `console.log("new version");` statement)
+1. Zip the folder again and upload it
+1. Publish another version with the new source code
+
+Now, through a canary deployment, we want to migrate the `production` alias from version 1 to version 2.
+
+1. To allow CodeDeploy to access our function, we need to create the respective role. Head over to the [IAM UI](https://console.aws.amazon.com/iamv2/home#/roles) and create a new role
+1. Choose "CodeDeploy" as the service and then "CodeDeploy for Lambda" as the use case
+1. Call the role `codedeploy-to-my-function-AWSUSER` (replacing "AWSUSER" with your username)
+1. Visit the [CodeDeploy UI](https://console.aws.amazon.com/codesuite/codedeploy/applications)
+1. Create a new application and give it the same name as your function. Choose "AWS Lambda" as the "Compute platform"
+1. Create a new deployment group and give it the same name as your function
+1. For the "Service role", choose the one we have just created
+1. The deployment configuration, should be set to "CodeDeployDefault.LambdaCanary10Percent1Minute" in order to trigger a canary deployment which will roll out to another 10% of users every minute
+1. Click "Create deployment" and choose "Use AppSpec editor" with "YAML"
+1. Enter the following code into the text field (replacing `AWSUSER` with your username):
+
+   ```yml
+   version: 0.0
+   Resources:
+     - my-function:
+         Type: AWS::Lambda::Function
+         Properties:
+           Name: "my-function-AWSUSER"
+           Alias: "production"
+           CurrentVersion: "1"
+           TargetVersion: "2"
+   ```
+
+1. Click "Create deployment"
+1. You can now observe in real time how your `production` alias gets switched from version 1 to version 2 gradually using a canary deployment
+
+### Already done? Try some of the bonus steps!
+
+<details>
+  <summary>Try it with the AWS CLI!</summary>
+
+1. Make sure the AWSUSER and ACCOUNT_ID environment variables are still set.
+
+   ```shell
+   export AWSUSER=<your AWS username>
+   ```
+
+1. Publish a new version of your current function
+
+   ```shell
+   aws lambda publish-version --function-name "my-function-cli-${AWSUSER}"
+   ```
+
+1. Create a deployment package for your new functions:
+
+   ```shell
+   cd level-9/function
+   npm install
+   zip -r function.zip ./*
+   ```
+
+1. TODO: Finish level 9
+
+</details>
+
+<details>
+  <summary>Still bored? Then try it with Terraform!</summary>
+
+1. Make sure your user variable is still set
+
+   ```shell
+   export TF_VAR_aws_user=<your AWS user name>
+   ```
+
+1. Navigate to the Terraform module
+
+   ```shell
+   cp level-9/advanced/terraform/* my-tf-module
+   cp -r level-9/function my-tf-module
+   ```
+
+1. Install the functions dependencies
+
+   ```shell
+   pushd my-tf-module/function
+   npm install
+   popd
+   ```
+
+1. Navigate to your Terraform module
+
+   ```shell
+   pushd my-tf-module
+   ```
+
+1. Apply the Terraform module again
+
+   ```shell
+   terraform apply
+   ```
+
+1. Change something about the function code and apply again to publish a new version (notice the `publish: true` flag in `function.tf`)
+1. Visit the [CodeDeploy UI](https://console.aws.amazon.com/codesuite/codedeploy/applications)
+1. Choose your application
+1. Click "Create deployment" and choose "Use AppSpec editor" with "YAML"
+1. Enter the following code into the text field (replacing `AWSUSER` with your username):
+
+   ```yml
+   version: 0.0
+   Resources:
+     - my-function:
+         Type: AWS::Lambda::Function
+         Properties:
+           Name: "my-function-tf-AWSUSER"
+           Alias: "production"
+           CurrentVersion: "1"
+           TargetVersion: "2"
+   ```
+
+1. Click "Create deployment"
+1. You can now observe in real time how your `production` alias gets switched from version 1 to version 2 gradually using a canary deployment
+
+</details>
