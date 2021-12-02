@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "jokes" {
-  name           = "Jokes-${var.aws_user}"
+  name           = "jokes-${var.aws_user}"
   read_capacity  = 1
   write_capacity = 1
   hash_key       = "ID"
