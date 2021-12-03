@@ -559,7 +559,7 @@ To reach this level, we'll make sure our function terminates in an orderly fashi
 This means, aborting IO operations or long-running calculations when the function time runs out, or at least return to your program flow to handle the return values.
 The AWS Lambda frameworks allow us to poll how much time is still left in a function call, which simplifies this.
 
-Before you deploy the improved function to lambda, inspect the provided code.
+Before you deploy the improved function to lambda, inspect the provided code in `level-3/function`.
 You will notice the following points:
 
 - The usage of `context.getRemainingTimeInMillis()` to receive from Lambda how much time is left in our function
