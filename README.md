@@ -10,6 +10,12 @@ At the start of the course, take care of the following tasks:
 
 Ensure that you have Node.js runtime version 14.x or higher installed on your machine. If you need to install it, follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, type `npm` in a shell, to check that it is available.
 
+In case you cannot or do not want to install Node.js and npm, you can also run the commands via a container. For example using Docker:
+
+```shell
+docker run ---rm -t -v "${PWD}:/src" -w '/src' docker.io/library/node:alpine npm install
+```
+
 ### Clone this repo
 
 Next you will need this repo on your own machine. Run `git clone https://github.com/bespinian/serverless-workshop.git` to clone this repo with all its steps
@@ -245,7 +251,7 @@ In order to authenticate Terraform, you first need to create an access key by pe
 1. Invoke the function via the AWS CLI
 
    ```shell
-   aws lambda invoke --function-name=$(terraform output -raw function_name) output.json
+   aws lambda invoke --function-name "$(terraform output -raw function_name)" output.json
    ```
 
 1. Invoke the function via HTTP.
