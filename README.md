@@ -18,32 +18,6 @@ Next you will need this repo on your own machine. Run `git clone https://github.
 
 Last but not least, you will of course also need access to AWS. You have received an AWS Account ID, an IAM user name and a password from the trainers. Navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
 
-### Optional: Install the AWS CLI
-
-#### Installation
-
-If you want to also work on some of the optional extra topics of this course, you need to install the AWS CLI on your machine. Follow the [AWS CLI installation instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and choose the installation method best suited for your operating system.
-
-#### Authentication
-
-In order to authenticate your CLI you first need to create an access key by performing the following steps:
-
-1. Log in to the AWS Console with your credentials
-1. Click on your name in the top right of the screen
-1. Click `My Security Credentials` in the dropdown
-1. Click `Create Access Key` under `Access keys for CLI, SDK, & API access`
-
-   Then, you need to configure your CLI with access key ID and the secret access key.
-
-1. Type `aws configure` in your terminal
-1. Copy your access key ID and the secret access key from the web console and paste them at the prompts
-1. Choose `eu-central-1` as the default region name
-1. Test the connection by typing `aws sts get-caller-identity` in your terminal. You should see some basic information about your user.
-
-### Optional: Install Terraform
-
-Some optional extra topics also require Terraform, which you need to install on your machine. Follow the [Terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli) and choose the installation method best suited for your operating system.
-
 ## Level 0 - This is easy!
 
 In this level, you will learn how to create a first simple function in AWS Lambda. You will also learn how to pass configuration parameters into a function using environment variables. Furthermore, you will see that AWS has a very strict, deny-by-default permission scheme.
@@ -91,6 +65,28 @@ Work through the following steps to expose your function on the Internet via the
 
 <details>
   <summary>Try it with the AWS CLI!</summary>
+
+#### Installation
+
+For the optional CLI steps you need to install the AWS CLI on your machine. Follow the [AWS CLI installation instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and choose the installation method best suited for your operating system.
+
+#### Authentication
+
+In order to authenticate your CLI you first need to create an access key by performing the following steps:
+
+1. Log in to the AWS Console with your credentials
+1. Click on your name in the top right of the screen
+1. Click `My Security Credentials` in the dropdown
+1. Click `Create Access Key` under `Access keys for CLI, SDK, & API access`
+
+   Then, you need to configure your CLI with access key ID and the secret access key.
+
+1. Type `aws configure` in your terminal
+1. Copy your access key ID and the secret access key from the web console and paste them at the prompts
+1. Choose `eu-central-1` as the default region name
+1. Test the connection by typing `aws sts get-caller-identity` in your terminal. You should see some basic information about your user.
+
+#### Steps
 
 1. Set the AWSUSER environment variable.
 
@@ -192,6 +188,12 @@ Work through the following steps to expose your function on the Internet via the
 
 <details>
   <summary>Still bored? Then try it with Terraform!</summary>
+
+#### Install Terraform
+
+For the optional Terraform steps you need to install Terraform on your machine. Follow the [Terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli) and choose the installation method best suited for your operating system.
+
+#### Steps
 
 1. Copy the Terraform module and the function code to a separate working directory
 
@@ -1226,7 +1228,6 @@ When you understand that functions can be assigned just the set of privileges th
    ```shell
    terraform apply
    ```
-
 
 </details>
 
