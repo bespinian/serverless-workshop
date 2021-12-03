@@ -145,7 +145,7 @@ In order to authenticate your CLI you first need to create an access key by perf
 1. Create an API on the API gateway
 
    ```shell
-   aws apigatewayv2 --profile personal create-api --name my-api-gw-cli-"$AWSUSER" --protocol-type HTTP
+   aws apigatewayv2 create-api --name my-api-gw-cli-"$AWSUSER" --protocol-type HTTP
    ```
 
 1. Set the variable $API_ID to the ID that was returned by the command above:
@@ -157,7 +157,7 @@ In order to authenticate your CLI you first need to create an access key by perf
 1. Create an integration on the API gateway pointing to your Lambda function:
 
    ```shell
-   aws apigatewayv2 --profile personal create-integration --api-id "$API_ID" --integration-type AWS_PROXY --integration-uri arn:aws:lambda:eu-central-1:"$ACCOUNT_ID":function:my-function-cli-"$AWSUSER" --payload-format-version
+   aws apigatewayv2 create-integration --api-id "$API_ID" --integration-type AWS_PROXY --integration-uri arn:aws:lambda:eu-central-1:"$ACCOUNT_ID":function:my-function-cli-"$AWSUSER" --payload-format-version
    2.0
    ```
 
@@ -170,18 +170,18 @@ In order to authenticate your CLI you first need to create an access key by perf
 1. Create a route pointing to your integration:
 
    ```shell
-   aws apigatewayv2 --profile personal create-route --api-id "$API_ID" --route-key "ANY /my-function" --target integrations/"$INTEGRATION_ID" --authorization-type NONE --no-api-key-required
+   aws apigatewayv2 create-route --api-id "$API_ID" --route-key "ANY /my-function" --target integrations/"$INTEGRATION_ID" --authorization-type NONE --no-api-key-required
    ```
 
 1. Create a stage that deploys the configuration:
 
    ```shell
-   aws apigatewayv2 --profile personal create-stage --api-id "$API_ID" --auto-deploy --stage-name default
+   aws apigatewayv2 create-stage --api-id "$API_ID" --auto-deploy --stage-name default
    ```
 
 1. Allow the API gateway to access the lambda function:
    ```shell
-   aws lambda add-permission --profile personal --function-name my-function-cli-"$AWSUSER" --statement-id apigateway-get --action lambda:InvokeFunction --principal apigateway.amazonaws.com --source-arn arn:aws:execute-api:eu-central-1:"$ACCOUNT_ID":"$API_ID"/*/*/my-function
+   aws lambda add-permission --function-name my-function-cli-"$AWSUSER" --statement-id apigateway-get --action lambda:InvokeFunction --principal apigateway.amazonaws.com --source-arn arn:aws:execute-api:eu-central-1:"$ACCOUNT_ID":"$API_ID"/*/*/my-function
    ```
 
 </details>
