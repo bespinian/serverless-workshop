@@ -157,8 +157,7 @@ In order to authenticate your CLI you first need to create an access key by perf
 1. Create an integration on the API gateway pointing to your Lambda function:
 
    ```shell
-   aws apigatewayv2 create-integration --api-id "$API_ID" --integration-type AWS_PROXY --integration-uri arn:aws:lambda:eu-central-1:"$ACCOUNT_ID":function:my-function-cli-"$AWSUSER" --payload-format-version
-   2.0
+   aws apigatewayv2 create-integration --api-id "$API_ID" --integration-type AWS_PROXY --integration-uri arn:aws:lambda:eu-central-1:"$ACCOUNT_ID":function:my-function-cli-"$AWSUSER" --payload-format-version 2.0
    ```
 
 1. Set the INTEGRATION_ID variable to the value of `IntegrationId` from the response:
