@@ -40,7 +40,6 @@ Work through the following steps:
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges
 1. Click `Create function`
 1. Copy the code from [./level-0/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-0/function/index.js) and paste it into the code editor field
-1. Press the `Deploy` button
 1. In the `Configuration` tab under `Environment variables`, set a variable called `NAME` to the name of a person you like
 1. In the `Test` tab, press the `Test` button and create a test event called `test`
 1. Press the `Test` button again to run the test
@@ -280,7 +279,6 @@ To reach level 1, you'll need to learn about the following topics:
 ### Steps
 
 1. In the Lambda GUI of your function, copy the code from [./level-1/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-1/function/index.js) and paste it over the existing code in the editor field
-1. Press the `Deploy` button
 1. In the `Test` tab, press the `Test` button and create a test event called `bob`
 1. Paste the following JSON object to the editor field
 
@@ -418,7 +416,6 @@ We modify the function to read a joke from a joke table and change the function 
    zip -r function.zip .
    ```
 
-1. Press the `Deploy` button
 1. In the `Configuration` tab, click `Permissions` and then the link to the execution role
 1. Click the `Attach Policies` button and add the "AmazonDynamoDBReadOnlyAccess" and the "AWSXRayDaemonWriteAccess" permissions to grant your function access to DynamoDB and the X-Ray service
 1. In the `Configuration` tab of the lambda function, select the `Monitoring and operations tools`, click edit and enable `Active tracing` in the `AWS X-Ray` section.
@@ -582,7 +579,6 @@ You will notice the following points:
 1. In the `Configuration` tab of the function, select the `General configuration` menu and set the timeout to 1 second
 1. Note that now only <20ms will be available for the DynamoDB query, because our grace period is set to 980ms
 1. Create a zip file from the `function` folder and upload it to the function
-1. Press the `Deploy` button
 1. On the functions `Test` tab create a test event with the following payload `{ "jokeID": "1" }` and click the `Test` button.
    You should see the function returning successfully, but with a message, that it reached the timeout.
 1. Set the timeout to 2 seconds and try again.
@@ -724,7 +720,6 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Choose the function `my-function-AWSUSER`, which you updated in level 3
 1. Run `npm install` in the folder [./level-4/function](https://github.com/bespinian/serverless-workshop/tree/main/level-4/function)
 1. Create a zip file from the folder [./level-4/function](https://github.com/bespinian/serverless-workshop/tree/main/level-4/function) and upload it to the function
-1. Press the `Deploy` button
 1. Press the `Test` button and create a test event called `joke`
 1. Paste the following JSON object to the editor field
 
@@ -1167,7 +1162,6 @@ When you understand that functions can be assigned just the set of privileges th
 1. Choose the function `my-function-AWSUSER`, which you updated in level 4
 1. Run `npm install` in the folder [./level-8/function](https://github.com/bespinian/serverless-workshop/tree/main/level-8/function)
 1. Create a zip file from the folder [./level-8/function](https://github.com/bespinian/serverless-workshop/tree/main/level-8/function) and upload it to the function
-1. Press the `Deploy` button
 1. Press the `Test` button and create a test event called `joke`
 1. Paste the following JSON object to the editor field
 
@@ -1261,7 +1255,6 @@ To reach level 9, we have to correctly deploy our app using a canary deployment.
 1. Choose the function `my-function-AWSUSER`, which you updated in level 4
 1. Run `npm install` in the folder [./level-9/function](https://github.com/bespinian/serverless-workshop/tree/main/level-9/function)
 1. Create a zip file from the folder [./level-9/function](https://github.com/bespinian/serverless-workshop/tree/main/level-9/function) and upload it to the function
-1. Press the `Deploy` button
 1. Go to the "Versions" tab and click "Publish a new version", then click "Publish"
 1. Click "Create alias" and call it "production"
 1. Change something in the function code (e.g. add a `console.log("new version");` statement)
