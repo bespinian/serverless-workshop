@@ -193,6 +193,22 @@ In order to authenticate your CLI you first need to create an access key by perf
 
 For the optional Terraform steps you need to install Terraform on your machine. Follow the [Terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli) and choose the installation method best suited for your operating system.
 
+#### Authentication
+
+In order to authenticate Terraform, you first need to create an access key by performing the following steps:
+
+1. Log in to the AWS Console with your credentials
+1. Click on your name in the top right of the screen
+1. Click `My Security Credentials` in the dropdown
+1. Click `Create Access Key` under `Access keys for CLI, SDK, & API access`
+
+   Then, you need to configure your machine with access key ID and the secret access key.
+
+1. Type `aws configure` in your terminal
+1. Copy your access key ID and the secret access key from the web console and paste them at the prompts
+1. Choose `eu-central-1` as the default region name
+1. Test the connection by typing `aws sts get-caller-identity` in your terminal. You should see some basic information about your user.
+
 #### Steps
 
 1. Copy the Terraform module and the function code to a separate working directory
