@@ -281,7 +281,7 @@ To reach level 1, you'll need to learn about the following topics:
 
 1. In the Lambda GUI of your function, copy the code from [./level-1/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-1/function/index.js) and paste it over the existing code in the editor field
 1. Press the `Deploy` button
-1. Press the `Test` button and create a test event called `bob`
+1. In the `Test` tab, press the `Test` button and create a test event called `bob`
 1. Paste the following JSON object to the editor field
 
    ```json
@@ -301,7 +301,7 @@ To reach level 1, you'll need to learn about the following topics:
    2021-09-10T12:26:33.779Z c70ee5e7-4295-4408-a713-9f3ceaaa53e3 ERROR Oh noes!
    ```
 
-1. Navigate to the tab `Configuration` and click on the category `Permissions`.
+1. Navigate back to your function in the Lambda console and switch to the tab `Configuration` and click on the category `Permissions`.
 1. Observe the logging permissions which were assigned to your function automatically.
 
 ### Already done? Try some of the bonus steps!
