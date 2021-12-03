@@ -578,6 +578,7 @@ You will notice the following points:
 1. Choose the function `my-function-AWSUSER`, which you created in level 0
 1. In the `Configuration` tab of the function, select the `General configuration` menu and set the timeout to 1 second
 1. Note that now only <20ms will be available for the DynamoDB query, because our grace period is set to 980ms
+1. Run `npm install` in the `function` folder.
 1. Create a zip file from the `function` folder and upload it to the function
 1. On the functions `Test` tab create a test event with the following payload `{ "jokeID": "1" }` and click the `Test` button.
    You should see the function returning successfully, but with a message, that it reached the timeout.
