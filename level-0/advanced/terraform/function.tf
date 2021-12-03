@@ -6,6 +6,11 @@ resource "aws_lambda_function" "my_function" {
   runtime = "nodejs14.x"
   handler = "index.handler"
 
+  environment {
+    variables = {
+      NAME = "${var.aws_user}"
+    }
+  }
   source_code_hash = data.archive_file.my_function.output_base64sha256
 
   role = aws_iam_role.lambda_exec.arn
