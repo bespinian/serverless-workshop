@@ -410,18 +410,19 @@ We modify the function to read a joke from a joke table and change the function 
 
 1. From your terminal, `cd` into the [./level-2/function](https://github.com/bespinian/serverless-workshop/tree/main/level-2/function) directory of this repo
 1. Run `npm install`
-1. Create a zip file from the folder [./level-2/function](https://github.com/bespinian/serverless-workshop/tree/main/level-2/function) and upload it to the function
+1. Create a zip file from the folder [./level-2/function](https://github.com/bespinian/serverless-workshop/tree/main/level-2/function)
 
    ```shell
    zip -r function.zip .
    ```
 
+1. Upload the zip file to the function by using the `Upload from` button
 1. In the `Configuration` tab, click `Permissions` and then the link to the execution role
 1. Click the `Attach Policies` button and add the "AmazonDynamoDBReadOnlyAccess" and the "AWSXRayDaemonWriteAccess" permissions to grant your function access to DynamoDB and the X-Ray service
-1. In the `Configuration` tab of the lambda function, select the `Monitoring and operations tools`, click edit and enable `Active tracing` in the `AWS X-Ray` section.
-1. On the functions `Test` tab create a test event with the following payload `{ "jokeID": "1" }` and click the `Test` button. You should see the joke loaded from the database in the response.
+1. In the `Configuration` tab of the lambda function, select the `Monitoring and operations tools`, click edit and enable `Active tracing` in the `AWS X-Ray` section
+1. On the function's `Test` tab create a test event with the following payload `{ "jokeID": "1" }` and click the `Test` button. You should see the joke loaded from the database in the response
 1. On the `Monitor` tab, select the `Traces` menu option and inspect the service map as well as the individual traces. Click on one of the traces to get familiar of what info you have available, such as how long the request to query the DynamoDB took.
-1. To call your function via HTTP, you must now provide a payload:
+1. To call your function via HTTP, you must now provide a payload (you can find the gateway API URL in the `Configuration` tab under `Triggers`):
    ```shell
    curl -v -X POST <api-gateway-url> --data '{"jokeID":"1"}'
    ```
