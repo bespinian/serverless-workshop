@@ -340,7 +340,7 @@ To reach level 1, you'll need to learn about the following topics:
    aws logs describe-log-streams --log-group-name "/aws/lambda/my-function-cli-${AWSUSER}"
    ```
 
-1. Inspect the log events of the log stream. You might have to escape some characters in the value passed in `--log-stream-name`
+1. Inspect the log events of the log stream. You might have to escape some characters in the value passed in `--log-stream-name` eg. `$LATEST` should be `\$LATEST`
 
    ```shell
    aws logs get-log-events --log-group-name "/aws/lambda/my-function-cli-${AWSUSER}" --log-stream-name=<name of latest log stream>
