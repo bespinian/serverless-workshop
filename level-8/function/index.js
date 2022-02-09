@@ -13,7 +13,7 @@ const tableSuffix = process.env.JOKE_TABLE_SUFFIX
 const ddb = AWSXRay.captureAWSv3Client(new DynamoDBClient());
 
 exports.handler = async (event) => {
-  // this shold work
+  // this should work
   const getItemCmd = new GetItemCommand({
     TableName: `jokes${tableSuffix}`,
     Key: { ID: { N: event.jokeID } },
