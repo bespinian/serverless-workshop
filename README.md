@@ -1046,12 +1046,6 @@ Follow the [Terraform installation instructions](https://learn.hashicorp.com/tut
    export TF_VAR_aws_user=<your AWS username>
    ```
 
-1. Copy the updated function code to your working directory
-
-   ```shell
-   cp -r level-6/function my-tf-module
-   ```
-
 1. Install the functions dependencies
 
    ```shell
