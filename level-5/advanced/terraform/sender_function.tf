@@ -4,7 +4,7 @@ resource "aws_lambda_function" "sender" {
   filename = data.archive_file.functions.output_path
 
   runtime = "nodejs14.x"
-  handler = "index.handler"
+  handler = "index.senderHandler"
 
   tracing_config {
     mode = "Active"
@@ -12,6 +12,13 @@ resource "aws_lambda_function" "sender" {
   source_code_hash = data.archive_file.functions.output_base64sha256
 
   role = aws_iam_role.sender_exec.arn
+
+  environment {
+    variables = {
+      SQS_QUEUE_URL = "${aws_sqs_queue.messages.url}"
+    }
+  }
+
 }
 
 resource "aws_cloudwatch_log_group" "sender_function" {
