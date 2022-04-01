@@ -952,6 +952,7 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Copy the updated function code to your working directory
 
    ```shell
+   cp -r level-5/advanced/terraform/* my-tf-module
    cp -r level-5/function my-tf-module
    ```
 

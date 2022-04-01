@@ -4,7 +4,7 @@ resource "aws_lambda_function" "recipient" {
   filename = data.archive_file.functions.output_path
 
   runtime = "nodejs14.x"
-  handler = "index.handler"
+  handler = "index.recipientHandler"
 
   tracing_config {
     mode = "Active"
