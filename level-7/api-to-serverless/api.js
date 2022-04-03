@@ -6,7 +6,7 @@ const port = 3000;
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  const name = req.body.name || JSON.parse(req.body).name; // hack to make this work with AWS lambda test events
+  const name = req.body.name;
   console.log(`${name} invoked me`);
   console.error("Oh noes!");
   res.send(`Hello ${name}`);
