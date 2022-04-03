@@ -1267,7 +1267,7 @@ Now, through a canary deployment, we want to migrate the `production` alias from
 1. Create a new application and give it the same name as your function. Choose "AWS Lambda" as the "Compute platform"
 1. Create a new deployment group and give it the same name as your function
 1. For the "Service role", choose the one we have just created
-1. The deployment configuration, should be set to "CodeDeployDefault.LambdaCanary10Percent1Minute" in order to trigger a canary deployment which will roll out to another 10% of users every minute
+1. The deployment configuration, should be set to "CodeDeployDefault.LambdaCanary10Percent5Minutes" in order to trigger a canary deployment which will roll out to another 10% of users every minute
 1. Click "Create deployment" and choose "Use AppSpec editor" with "YAML"
 1. Enter the following code into the text field (replacing `AWSUSER` with your username):
 
