@@ -1289,34 +1289,7 @@ Now, through a canary deployment, we want to migrate the `production` alias from
 ### Already done? Try some bonus steps!
 
 <details>
-  <summary>Try it with the AWS CLI!</summary>
-
-1. Make sure the `AWSUSER` and `ACCOUNT_ID` environment variables are still set.
-
-   ```shell
-   export AWSUSER=<your AWS username>
-   ```
-
-1. Publish a new version of your current function
-
-   ```shell
-   aws lambda publish-version --function-name "my-function-cli-${AWSUSER}"
-   ```
-
-1. Create a deployment package for your new functions:
-
-   ```shell
-   cd level-9/function
-   npm install
-   zip -r function.zip ./*
-   ```
-
-1. TODO: Finish level 9
-
-</details>
-
-<details>
-  <summary>Still bored? Then try it with Terraform!</summary>
+  <summary>Try it with Terraform!</summary>
 
 1. Make sure your user variable is still set
 
