@@ -6,7 +6,7 @@ resource "aws_codedeploy_app" "main" {
 resource "aws_codedeploy_deployment_group" "main" {
   deployment_group_name  = aws_codedeploy_app.main.name
   app_name               = aws_codedeploy_app.main.name
-  deployment_config_name = "CodeDeployDefault.LambdaCanary10Percent1Minute"
+  deployment_config_name = "CodeDeployDefault.LambdaCanary10Percent5Minutes"
 
   deployment_style {
     deployment_type   = "BLUE_GREEN"
