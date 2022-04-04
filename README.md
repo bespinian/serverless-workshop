@@ -13,7 +13,7 @@ Ensure that you have Node.js runtime version 14.x or higher installed on your ma
 In case you cannot or do not want to install Node.js and npm, you can also run the commands via a container. For example, using Docker:
 
 ```shell
-docker run ---rm -t -v "${PWD}:/src" -w '/src' docker.io/library/node:alpine npm install
+docker run --rm -t -v "${PWD}:/src" -w '/src' docker.io/library/node:alpine npm install
 ```
 
 ### Clone this repo
