@@ -132,7 +132,7 @@ In order to authenticate your CLI, you first need to create an access key by per
 1. Set the `NAME` environment variable to your username:
 
    ```shell
-   aws lambda update-function-configuration --function-name "my-function-cli-${AWSUSER}" --environment "Variables={NAME='$AWSUSER'}"
+   aws lambda update-function-configuration --function-name "my-function-cli-${AWSUSER}" --environment "Variables={NAME='${AWSUSER}'}"
    ```
 
 1. Invoke the function:
@@ -150,10 +150,10 @@ In order to authenticate your CLI, you first need to create an access key by per
 1. Create an API on the API gateway
 
    ```shell
-   aws apigatewayv2 create-api --name my-api-gw-cli-"$AWSUSER" --protocol-type HTTP
+   aws apigatewayv2 create-api --name "my-api-gw-cli-${AWSUSER}" --protocol-type HTTP
    ```
 
-1. Set the variable $API_ID to the ID that was returned by the command above:
+1. Set the variable `API_ID` to the ID that was returned by the command above:
 
    ```shell
    export API_ID=<the API ID>
@@ -162,7 +162,7 @@ In order to authenticate your CLI, you first need to create an access key by per
 1. Create an integration on the API gateway pointing to your Lambda function:
 
    ```shell
-   aws apigatewayv2 create-integration --api-id "$API_ID" --integration-type AWS_PROXY --integration-uri arn:aws:lambda:eu-central-1:"$ACCOUNT_ID":function:my-function-cli-"$AWSUSER" --payload-format-version 2.0
+   aws apigatewayv2 create-integration --api-id "$API_ID" --integration-type AWS_PROXY --integration-uri "arn:aws:lambda:eu-central-1:${ACCOUNT_ID}:function:my-function-cli-${AWSUSER}" --payload-format-version 2.0
    ```
 
 1. Set the INTEGRATION_ID variable to the value of `IntegrationId` from the response:
@@ -174,7 +174,7 @@ In order to authenticate your CLI, you first need to create an access key by per
 1. Create a route pointing to your integration:
 
    ```shell
-   aws apigatewayv2 create-route --api-id "$API_ID" --route-key "ANY /my-function" --target integrations/"$INTEGRATION_ID" --authorization-type NONE --no-api-key-required
+   aws apigatewayv2 create-route --api-id "$API_ID" --route-key "ANY /my-function" --target "integrations/${INTEGRATION_ID}" --authorization-type NONE --no-api-key-required
    ```
 
 1. Create a stage that deploys the configuration:
@@ -185,7 +185,7 @@ In order to authenticate your CLI, you first need to create an access key by per
 
 1. Allow the API gateway to access the lambda function:
    ```shell
-   aws lambda add-permission --function-name my-function-cli-"$AWSUSER" --statement-id apigateway-get --action lambda:InvokeFunction --principal apigateway.amazonaws.com --source-arn arn:aws:execute-api:eu-central-1:"$ACCOUNT_ID":"$API_ID"/*/*/my-function
+   aws lambda add-permission --function-name "my-function-cli-${AWSUSER}" --statement-id apigateway-get --action lambda:InvokeFunction --principal apigateway.amazonaws.com --source-arn "arn:aws:execute-api:eu-central-1:${ACCOUNT_ID}:${API_ID}/*/*/my-function"
    ```
 
 </details>
@@ -448,7 +448,7 @@ We modify the function to read a joke from a joke table and change the function 
 1. Create a policy for access to the "jokes" table in DynamoDB
 
    ```shell
-   aws iam create-policy --policy-name "read-jokes-db-table-cli-${AWSUSER}" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'$ACCOUNT_ID':table/jokes" }]}'
+   aws iam create-policy --policy-name "read-jokes-db-table-cli-${AWSUSER}" --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Sid": "ReadWriteTable", "Effect": "Allow", "Action": [ "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan" ], "Resource": "arn:aws:dynamodb:eu-central-1:'${ACCOUNT_ID}':table/jokes" }]}'
    ```
 
 1. Attach the policy to your role
@@ -1195,13 +1195,13 @@ When you understand that functions can be assigned just the set of privileges th
 1. Update the function with the new code:
 
    ```shell
-   aws lambda update-function-code --function-name my-function-cli-"$AWSUSER" --zip-file fileb://level-8/function/function.zip
+   aws lambda update-function-code --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://level-8/function/function.zip
    ```
 
 1. Invoke the function with a test event:
 
    ```shell
-   aws lambda invoke --function-name my-function-cli-"$AWSUSER" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   aws lambda invoke --function-name "my-function-cli-${AWSUSER}" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
    ```
 
 </details>
