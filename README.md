@@ -2,6 +2,8 @@
 
 This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, if you prefer working with the [AWS CLI version 2](https://aws.amazon.com/cli/) or with [Terraform](https://www.terraform.io/), you may switch to one of these technologies at any stage in the course. All serverless function in this course are written in Node.js. If you stay on the basic track, you will only need to have the Node.js runtime and `npm` installed on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
 
+> The commands are geared towards Unix systems. If you're using Windows, you might need to adapt some of them. A more convenient solution is to use [WSL](https://docs.microsoft.com/en-us/windows/wsl/) or [Git BASH](https://git-scm.com/downloads).
+
 ## Preparation
 
 At the start of the course, take care of the following tasks:
