@@ -18,7 +18,7 @@ docker run --rm -t -v "${PWD}:/src" -w '/src' docker.io/library/node:alpine npm 
 
 ### Clone this repo
 
-Next, you will need this repo on your own machine. Run `git clone https://github.com/bespinian/serverless-workshop.git` to clone this repo with all its steps
+Next, you will need this repo on your own machine. Run `git clone https://github.com/bespinian/serverless-workshop.git` to clone this repo with all its steps.
 
 ### Test your AWS login
 
