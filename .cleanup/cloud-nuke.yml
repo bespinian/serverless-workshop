@@ -1,0 +1,13 @@
+# Cleanup config to be run with https://github.com/gruntwork-io/cloud-nuke
+# Command:
+# AWS_PROFILE=bespinian-serverless-workshop cloud-nuke aws --config .cleanup/cloud-nuke.yml
+
+IAMUsers:
+  exclude:
+    names_regex:
+      - ^lena-fuhrimann$
+      - ^mathis-kretz$
+DynamoDB:
+  exclude:
+    names_regex:
+      - ^jokes$
