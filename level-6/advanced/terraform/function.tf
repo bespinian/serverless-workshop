@@ -3,7 +3,7 @@ resource "aws_lambda_function" "my_function" {
 
   filename = data.archive_file.my_function.output_path
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs16.x"
   handler = "index.handler"
 
   environment {
@@ -11,7 +11,7 @@ resource "aws_lambda_function" "my_function" {
       JOKE_TABLE_SUFFIX = "-${var.aws_user}"
     }
   }
-  
+
   tracing_config {
     mode = "Active"
   }

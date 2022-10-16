@@ -1,6 +1,6 @@
 # Level Up Your Serverless Game
 
-This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, if you prefer working with the [AWS CLI version 2](https://aws.amazon.com/cli/) or with [Terraform](https://www.terraform.io/), you may switch to one of these technologies at any stage in the course. All serverless functions in this course are written in Node.js. If you stay on the basic track, you will only need to have the Node.js runtime and `npm` installed on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
+This workshop consists of multiple levels of increasing difficulty. The basic track of this course uses the [AWS Web Console](https://console.aws.amazon.com/). However, as soon as you're done with that track, you can alternatively use the [AWS CLI version 2](https://aws.amazon.com/cli/) or [Terraform](https://www.terraform.io/). You can switch to one of these technologies at any stage in the course. All serverless functions in this course are written in Node.js. If you stay on the basic track, you will only need to have the Node.js runtime and `npm` installed on your machine. If you want to switch to the CLI or to Terraform, you need to follow the optional installation instructions below.
 
 > The commands are geared towards Unix systems. If you're using Windows, you might need to adapt some of them. A more convenient solution is to use [WSL](https://docs.microsoft.com/en-us/windows/wsl/) or [Git BASH](https://git-scm.com/downloads).
 
@@ -10,12 +10,12 @@ At the start of the course, take care of the following tasks:
 
 ### Ensure Node.js and npm are installed
 
-Ensure that you have Node.js runtime version 14.x or higher installed on your machine. If you need to install it, follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, type `npm` in a shell, to check that it is available.
+Ensure that you have Node.js runtime version 16.x or newer installed on your machine. If you need to install it, follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, type `npm` in a shell, to check that it is available.
 
 In case you cannot or do not want to install Node.js and npm, you can also run the commands via a container. For example, using Docker:
 
 ```shell
-docker run --rm -t -v "${PWD}:/src" -w '/src' docker.io/library/node:alpine npm install
+docker run --rm -t -v "${PWD}:/src" -w '/src' docker.io/node:alpine npm install
 ```
 
 ### Clone this repo
@@ -24,7 +24,7 @@ Next, you will need this repo on your own machine. Run `git clone https://github
 
 ### Test your AWS login
 
-Finally, you will of course also require access to AWS. You have received an AWS Account ID, an IAM username and a password from the trainers. Navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
+Finally, you will of course also require access to AWS. You have received an AWS Account ID, an IAM user name and a password from the trainers. Navigate to <https://console.aws.amazon.com/>, choose "IAM user", and enter the Account ID and then your credentials. This logs you into the console. From there you should be able to reach the service `Lambda`.
 
 ## Level 0 - This is easy!
 
@@ -37,8 +37,8 @@ Work through the following steps:
 1. Go to the [AWS Lambda GUI](https://console.aws.amazon.com/lambda)
 1. Choose **Europe (Frankfurt) eu-central-1** as the region in the top-right corner. All resources you create should be created in that region.
 1. Click on `Create function`
-1. Choose `my-function-AWSUSER` as the function name, replacing `AWSUSER` with your username
-1. Choose `Node.js 14.x` as the runtime
+1. Choose `my-function-AWSUSER` as the function name, replacing `AWSUSER` with your user name
+1. Choose `Node.js 16.x` as the runtime
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges
 1. Click `Create function`
 1. Copy the code from [level-0/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-0/function/index.js) and paste it into the code editor field
@@ -61,11 +61,15 @@ Work through the following steps to expose your function on the Internet via the
 
 1. In the Functional overview at the top, click `Add trigger`
 1. Select `API Gateway`
-1. For API, select `Create an API`
+1. For API, select `Create a new API`
 1. Select `HTTP API` as the API Type
 1. Select `Open`, in Security
 1. Click `Add`
-1. You should now see the new Trigger and the URL to access it.
+1. Click on the created API and visit the `Integrations` tab
+1. Click the `ANY` integration and hit the `Manage integration` button
+1. Click `Edit` and expand the `Advanced settings`. In there, choose the "Payload format version" `2.0` and hit the `Save` button
+1. You can now close this tab to go back to your function. Changing the integration format was necessary because our function returns the newer and simpler version `2.0` format.
+1. You should now see your newly created Trigger and the URL to access it.
    Click the link to see the response in your browser.
 
 ### Already done? Try some bonus steps!
@@ -98,7 +102,7 @@ To authenticate your CLI, you first need to create an access key by performing t
 1. Set the `AWSUSER` environment variable.
 
    ```shell
-   export AWSUSER=<your AWS username>
+   export AWSUSER=<your AWS user name>
    ```
 
 1. Create an execution role which will allow Lambda functions to access AWS resources:
@@ -119,7 +123,7 @@ To authenticate your CLI, you first need to create an access key by performing t
    zip -j function.zip level-0/function/index.js
    ```
 
-1. Find out your Account ID by clicking your username in the top-right corner. Then set it as a variable in your shell.
+1. Find out your Account ID by clicking your user name in the top-right corner. Then set it as a variable in your shell.
 
    ```shell
    export ACCOUNT_ID=<your account ID>
@@ -128,10 +132,10 @@ To authenticate your CLI, you first need to create an access key by performing t
 1. Create the function:
 
    ```shell
-    aws lambda create-function --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.handler --runtime nodejs14.x --role "arn:aws:iam::${ACCOUNT_ID}:role/lambda-exec-cli-${AWSUSER}"
+    aws lambda create-function --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.handler --runtime nodejs16.x --role "arn:aws:iam::${ACCOUNT_ID}:role/lambda-exec-cli-${AWSUSER}"
    ```
 
-1. Set the `NAME` environment variable to your username:
+1. Set the `NAME` environment variable to your user name:
 
    ```shell
    aws lambda update-function-configuration --function-name "my-function-cli-${AWSUSER}" --environment "Variables={NAME='${AWSUSER}'}"
@@ -237,10 +241,10 @@ To authenticate Terraform, you first need to create an access key by performing 
    terraform init
    ```
 
-1. Set your AWS username as an environment variable for Terraform
+1. Set your AWS user name as an environment variable for Terraform
 
    ```shell
-   export TF_VAR_aws_user=<your AWS username>
+   export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Apply the Terraform module
@@ -312,7 +316,7 @@ To reach level 1, you'll need to learn about the following topics:
 1. Make sure the `AWSUSER` and `ACCOUNT_ID` environment variables are still set.
 
    ```shell
-   export AWSUSER=<your AWS username>
+   export AWSUSER=<your AWS user name>
    export ACCOUNT_ID=<your account ID>
    ```
 
@@ -354,7 +358,7 @@ To reach level 1, you'll need to learn about the following topics:
 1. Make sure your user variable is still set
 
    ```shell
-   export TF_VAR_aws_user=<your AWS username>
+   export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Navigate to the Terraform module
@@ -419,7 +423,7 @@ We modify the function to read a joke from a joke table and change the function 
    ```
 
 1. Upload the zip file to the function by using the `Upload from` button
-1. In the `Configuration` tab, click `Permissions` and then the link to the execution role
+1. In the `Configuration` tab, click `Permissions` and then click the link to the execution role
 1. Click the `Attach Policies` button and add the "AmazonDynamoDBReadOnlyAccess" and the "AWSXRayDaemonWriteAccess" permissions to grant your function access to DynamoDB and the X-Ray service
 1. In the `Configuration` tab of the lambda function, select the `Monitoring and operations tools`, click edit and enable `Active tracing` in the `AWS X-Ray` section
 1. On the function's `Test` tab, create a test event with the following payload `{ "jokeID": "1" }` and click the `Test` button. You should see the joke loaded from the database in the response
@@ -437,7 +441,7 @@ We modify the function to read a joke from a joke table and change the function 
 1. Make sure the `AWSUSER` and `ACCOUNT_ID` environment variables are still set.
 
    ```shell
-   export AWSUSER=<your AWS username>
+   export AWSUSER=<your AWS user name>
    export ACCOUNT_ID=<your account ID>
    ```
 
@@ -500,7 +504,7 @@ We modify the function to read a joke from a joke table and change the function 
 1. Make sure your work directory and user variables are still set
 
    ```shell
-   export TF_VAR_aws_user=<your AWS username>
+   export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Copy the new function code and the updated Terraform resources to your work directory
@@ -596,7 +600,7 @@ You will notice the following points:
 1. Make sure the `AWSUSER` and `ACCOUNT_ID` environment variables are still set.
 
    ```shell
-   export AWSUSER=<your AWS username>
+   export AWSUSER=<your AWS user name>
    export ACCOUNT_ID=<your account ID>
    ```
 
@@ -651,7 +655,7 @@ You will notice the following points:
 1. Make sure your work directory and user variables are still set
 
    ```shell
-   export TF_VAR_aws_user=<your AWS username>
+   export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Copy the Terraform module and the function code from level 3
@@ -744,7 +748,7 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Make sure the `AWSUSER` and `ACCOUNT_ID` environment variables are still set.
 
    ```shell
-   export AWSUSER=<your AWS username>
+   export AWSUSER=<your AWS user name>
    export ACCOUNT_ID=<your account ID>
    ```
 
@@ -777,7 +781,7 @@ To reach level 4, you will need to reduce the cold start time of your function. 
 1. Make sure your user variable is still set
 
    ```shell
-   export TF_VAR_aws_user=<your AWS username>
+   export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Copy the updated function code to your working directory
@@ -839,11 +843,11 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
    zip -r function.zip ./*
    ```
 
-1. In the Lambda GUI, create a new function called `sender-AWSUSER` (replace "AWSUSER" with your username) and leave all the defaults
-1. Create another function called `recipient-AWSUSER` (replace "AWSUSER" with your username) and leave all the defaults
+1. In the Lambda GUI, create a new function called `sender-AWSUSER` (replace "AWSUSER" with your user name) and leave all the defaults
+1. Create another function called `recipient-AWSUSER` (replace "AWSUSER" with your user name) and leave all the defaults
 1. Upload `function.zip` to both functions and inspect the file. It defines and exports two different handlers. The first one sends an event to an SQS queue and the second one receives it.
 1. Scroll down to `Runtime settings` and change the "Handler" to `index.senderHandler` for the sender function and to `index.recipientHandler` for the recipient function. For Node.js, the "index" part refers to the file name and the "handler" part to the name of the export. So, we can have multiple functions in the same source code.
-1. Head over to the [SQS GUI](https://eu-central-1.console.aws.amazon.com/sqs/v2/home) and create a new queue called `messages-AWSUSER` replacing "AWSUSER" with your username and leave all the defaults. Then copy the URL of your newly created function to the clipboard. The URL can be found in the "Details" of the queue.
+1. Head over to the [SQS GUI](https://eu-central-1.console.aws.amazon.com/sqs/v2/home) and create a new queue called `messages-AWSUSER` replacing "AWSUSER" with your user name and leave all the defaults. Then copy the URL of your newly created function to the clipboard. The URL can be found in the "Details" of the queue.
 1. Set the `SQS_QUEUE_URL` environment variable to the name of the queue you have just created for the sender function
 1. Give the sender function the permission to send messages to the queue by clicking its role name in the "Configuration" tab under "Permissions". Then attach the policy called `AmazonSQSFullAccess`.
 1. Give the recipient function the permission to read messages from the queue by clicking its role name in the "Configuration" tab under "Permissions". Then attach the policy called `AWSLambdaSQSQueueExecutionRole`.
@@ -860,7 +864,7 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Make sure the `AWSUSER` and `ACCOUNT_ID` environment variables are still set.
 
    ```shell
-   export AWSUSER=<your AWS username>
+   export AWSUSER=<your AWS user name>
    ```
 
 1. Create a deployment package for your new functions:
@@ -883,9 +887,9 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 
    ```shell
    export SENDER_ROLE_ARN=$(aws iam get-role --role-name "sender-exec-cli-${AWSUSER}" --query Role.Arn --output text)
-   aws lambda create-function --function-name "sender-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs14.x --role "$SENDER_ROLE_ARN"
+   aws lambda create-function --function-name "sender-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs16.x --role "$SENDER_ROLE_ARN"
    export RECIPIENT_ROLE_ARN=$(aws iam get-role --role-name "recipient-exec-cli-${AWSUSER}" --query Role.Arn --output text)
-   aws lambda create-function --function-name "recipient-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs14.x --role "$RECIPIENT_ROLE_ARN"
+   aws lambda create-function --function-name "recipient-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs16.x --role "$RECIPIENT_ROLE_ARN"
    ```
 
 1. Create a new message queue
@@ -948,7 +952,7 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Make sure your user variable is still set
 
    ```shell
-   export TF_VAR_aws_user=<your AWS username>
+   export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Copy the updated function code to your working directory
@@ -1011,16 +1015,18 @@ Infrastructure as code allows us to manage the deployments of our functions and 
 To deploy the function from level-4, and it's required resources, follow the steps below.
 You can also use this to deploy it to your own AWS account with very few commands.
 
+> Note!
+>
+> If you have done some extra work and already deployed the previous levels with Terraform, you may skip this level, as it redeploys the code from level 4.
+
 ### Prerequisites
 
 For this step, need Terraform installed on your machine.
 Follow the [Terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli) and choose the installation method best suited for your operating system.
 
-### Steps
+Furthermore, you need to have valid credentials for your AWS user set up in your terminal. You can test that by running the `aws sts get-caller-identity` command. You should see some basic information about your user. If that doesn't work, go back to the first "Already done? Try some bonus steps!" section in Level 0. There, in "Try it with the AWS CLI!", follow the "Installation" and "Authentication" instructions.
 
-> Note!
->
-> If you have done some extra work and already deployed the previous levels with Terraform, you may skip this level, as it redeploys the code from level 4.
+### Steps
 
 1. Copy the Terraform module and the function code to a separate working directory
 
@@ -1039,21 +1045,21 @@ Follow the [Terraform installation instructions](https://learn.hashicorp.com/tut
 1. Initialize the Terraform module
 
    ```shell
-   terraform init
+   terraform -chdir=my-tf-module init
    ```
 
-1. Set your AWS username as an environment variable for Terraform
+1. Set your AWS user name as an environment variable for Terraform
 
    ```shell
-   export TF_VAR_aws_user=<your AWS username>
+   export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Install the functions dependencies
 
    ```shell
-   pushd my-tf-module/function
+   cd my-tf-module/function
    npm install
-   popd
+   cd ../..
    ```
 
 1. Navigate to your Terraform module
@@ -1062,22 +1068,16 @@ Follow the [Terraform installation instructions](https://learn.hashicorp.com/tut
    pushd my-tf-module
    ```
 
-1. Apply the Terraform module again
+1. Apply the Terraform module
 
    ```shell
-   terraform apply
+   terraform -chdir=my-tf-module apply
    ```
 
 1. Invoke the function with a test event:
 
    ```shell
    aws lambda invoke --function-name "my-function-tf-${TF_VAR_aws_user}" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
-   ```
-
-1. Navigate back to the workshop repo
-
-   ```shell
-   popd
    ```
 
 ## Level 7 - Testing ... duh!
@@ -1181,7 +1181,7 @@ When you understand that functions can be assigned just the set of privileges th
 1. Make sure the `AWSUSER` and `ACCOUNT_ID` environment variables are still set.
 
    ```shell
-   export AWSUSER=<your AWS username>
+   export AWSUSER=<your AWS user name>
    export ACCOUNT_ID=<your account ID>
    ```
 
@@ -1214,7 +1214,7 @@ When you understand that functions can be assigned just the set of privileges th
 1. Make sure your user variable is still set
 
    ```shell
-   export TF_VAR_aws_user=<your AWS username>
+   export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Copy the updated function code to your working directory
@@ -1264,14 +1264,14 @@ Now, through a canary deployment, we want to migrate the `production` alias from
 
 1. To allow CodeDeploy to access our function, we need to create the respective role. Head over to the [IAM UI](https://console.aws.amazon.com/iamv2/home#/roles) and create a new role
 1. Choose "CodeDeploy" as the service and then "CodeDeploy for Lambda" as the use case
-1. Call the role `codedeploy-to-my-function-AWSUSER` (replacing "AWSUSER" with your username)
+1. Call the role `codedeploy-to-my-function-AWSUSER` (replacing "AWSUSER" with your user name)
 1. Visit the [CodeDeploy UI](https://console.aws.amazon.com/codesuite/codedeploy/applications)
 1. Create a new application and give it the same name as your function. Choose "AWS Lambda" as the "Compute platform"
 1. Create a new deployment group and give it the same name as your function
 1. For the "Service role", choose the one we have just created
 1. The deployment configuration, should be set to "CodeDeployDefault.LambdaCanary10Percent5Minutes" to trigger a canary deployment which will roll out to another 10% of users every minute
 1. Click "Create deployment" and choose "Use AppSpec editor" with "YAML"
-1. Enter the following code into the text field (replacing `AWSUSER` with your username):
+1. Enter the following code into the text field (replacing `AWSUSER` with your user name):
 
    ```yml
    version: 0.0
@@ -1296,7 +1296,7 @@ Now, through a canary deployment, we want to migrate the `production` alias from
 1. Make sure your user variable is still set
 
    ```shell
-   export TF_VAR_aws_user=<your AWS username>
+   export TF_VAR_aws_user=<your AWS user name>
    ```
 
 1. Navigate to the Terraform module
@@ -1330,7 +1330,7 @@ Now, through a canary deployment, we want to migrate the `production` alias from
 1. Visit the [CodeDeploy UI](https://console.aws.amazon.com/codesuite/codedeploy/applications)
 1. Choose your application
 1. Click "Create deployment" and choose "Use AppSpec editor" with "YAML"
-1. Enter the following code into the text field (replacing `AWSUSER` with your username):
+1. Enter the following code into the text field (replacing `AWSUSER` with your user name):
 
    ```yml
    version: 0.0
