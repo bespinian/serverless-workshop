@@ -11,7 +11,7 @@ exports.handler = async (event, context) => {
   const ddb = AWSXRay.captureAWSv3Client(new DynamoDBClient());
 
   // Abort before function times out
-  const timoutPromise = new Promise((_, reject) =>
+  const timeoutPromise = new Promise((_, reject) =>
     setTimeout(
       () => reject(new Error("Timeout")),
       context.getRemainingTimeInMillis() - TIMEOUT_GRACE_PERIOD_IN_MILLIS
@@ -33,7 +33,7 @@ exports.handler = async (event, context) => {
   responsePromise = ddb.send(cmd);
 
   try {
-    response = await Promise.race([timoutPromise, responsePromise]);
+    response = await Promise.race([timeoutPromise, responsePromise]);
     console.log(
       `Remaining time after db query is ${context.getRemainingTimeInMillis()}ms.`
     );
