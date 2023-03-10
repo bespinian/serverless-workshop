@@ -10,7 +10,7 @@ At the start of the course, take care of the following tasks:
 
 ### Ensure Node.js and npm are installed
 
-Ensure that you have Node.js runtime version 16.x or newer installed on your machine. If you need to install it, follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, type `npm` in a shell, to check that it is available.
+Ensure that you have Node.js runtime version 18.x or newer installed on your machine. If you need to install it, follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, type `npm` in a shell, to check that it is available.
 
 In case you cannot or do not want to install Node.js and npm, you can also run the commands via a container. For example, using Docker:
 
@@ -38,7 +38,7 @@ Work through the following steps:
 1. Choose **Europe (Frankfurt) eu-central-1** as the region in the top-right corner. All resources you create should be created in that region.
 1. Click on `Create function`
 1. Choose `my-function-AWSUSER` as the function name, replacing `AWSUSER` with your user name
-1. Choose `Node.js 16.x` as the runtime
+1. Choose `Node.js 18.x` as the runtime
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges
 1. Click `Create function`
 1. Copy the code from [level-0/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-0/function/index.js) and paste it into the code editor field
@@ -132,7 +132,7 @@ To authenticate your CLI, you first need to create an access key by performing t
 1. Create the function:
 
    ```shell
-    aws lambda create-function --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.handler --runtime nodejs16.x --role "arn:aws:iam::${ACCOUNT_ID}:role/lambda-exec-cli-${AWSUSER}"
+    aws lambda create-function --function-name "my-function-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.handler --runtime nodejs18.x --role "arn:aws:iam::${ACCOUNT_ID}:role/lambda-exec-cli-${AWSUSER}"
    ```
 
 1. Set the `NAME` environment variable to your user name:
@@ -887,9 +887,9 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 
    ```shell
    export SENDER_ROLE_ARN=$(aws iam get-role --role-name "sender-exec-cli-${AWSUSER}" --query Role.Arn --output text)
-   aws lambda create-function --function-name "sender-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs16.x --role "$SENDER_ROLE_ARN"
+   aws lambda create-function --function-name "sender-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs18.x --role "$SENDER_ROLE_ARN"
    export RECIPIENT_ROLE_ARN=$(aws iam get-role --role-name "recipient-exec-cli-${AWSUSER}" --query Role.Arn --output text)
-   aws lambda create-function --function-name "recipient-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs16.x --role "$RECIPIENT_ROLE_ARN"
+   aws lambda create-function --function-name "recipient-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs18.x --role "$RECIPIENT_ROLE_ARN"
    ```
 
 1. Create a new message queue
