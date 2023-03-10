@@ -3,7 +3,7 @@ resource "aws_lambda_function" "my_function" {
 
   filename = "${path.module}/function.zip"
 
-  runtime = "nodejs16.x"
+  runtime = "nodejs18.x"
   handler = "index.handler"
 
   source_code_hash = data.archive_file.my_function.output_base64sha256
