@@ -1,4 +1,4 @@
-const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
+import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 
 const ddb = new DynamoDBClient();
 

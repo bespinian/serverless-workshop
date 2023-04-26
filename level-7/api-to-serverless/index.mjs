@@ -1,5 +1,5 @@
-const serverless = require("serverless-http");
-const app = require("./api.js").app;
+import serverless from "serverless-http";
+import { app } from "./api.js";
 
 export const handler = serverless(app, {
   request(request, event, context) {

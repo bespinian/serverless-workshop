@@ -1,9 +1,9 @@
-const AWSXRay = require("aws-xray-sdk-core");
-const {
+import AWSXRay from "aws-xray-sdk-core";
+import {
   DynamoDBClient,
   GetItemCommand,
   PutItemCommand,
-} = require("@aws-sdk/client-dynamodb");
+} from "@aws-sdk/client-dynamodb";
 
 const tableSuffix = process.env.JOKE_TABLE_SUFFIX
   ? process.env.JOKE_TABLE_SUFFIX
