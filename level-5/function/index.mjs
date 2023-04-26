@@ -4,7 +4,7 @@ const sqsQueueURL = process.env.SQS_QUEUE_URL;
 
 const sqs = new SQSClient({ region: "eu-central-1" });
 
-exports.senderHandler = async () => {
+export const senderHandler = async () => {
   const cmd = new SendMessageCommand({
     MessageBody: "Hello from sender function",
     QueueUrl: sqsQueueURL,
@@ -18,7 +18,7 @@ exports.senderHandler = async () => {
   }
 };
 
-exports.recipientHandler = async (event) => {
+export const recipientHandler = async (event) => {
   event.Records.forEach((record) => {
     console.log(`Message ${record.messageId} received: ${record.body}`);
   });

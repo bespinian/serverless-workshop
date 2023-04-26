@@ -1,7 +1,7 @@
 const AWSXRay = require("aws-xray-sdk-core");
 const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   const TIMEOUT_GRACE_PERIOD_IN_MILLIS = 980;
 
   const tableSuffix = process.env.JOKE_TABLE_SUFFIX

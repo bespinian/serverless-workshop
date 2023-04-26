@@ -1,4 +1,4 @@
-exports.handler = async (event) => {
+export const handler = async (event) => {
   console.log(`${event.name} invoked me`);
   console.error("Oh noes!");
 

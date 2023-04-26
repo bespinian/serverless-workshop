@@ -12,7 +12,7 @@ const tableSuffix = process.env.JOKE_TABLE_SUFFIX
 // share the db connection between invocations
 const ddb = AWSXRay.captureAWSv3Client(new DynamoDBClient());
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   // this should work
   const getItemCmd = new GetItemCommand({
     TableName: `jokes${tableSuffix}`,
