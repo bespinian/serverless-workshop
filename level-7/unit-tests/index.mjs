@@ -2,7 +2,7 @@ const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
 
 const ddb = new DynamoDBClient();
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   const tableSuffix = process.env.JOKE_TABLE_SUFFIX
     ? process.env.JOKE_TABLE_SUFFIX
     : "";

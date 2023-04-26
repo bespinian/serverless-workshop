@@ -41,7 +41,7 @@ Work through the following steps:
 1. Choose `Node.js 18.x` as the runtime
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges
 1. Click `Create function`
-1. Copy the code from [level-0/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-0/function/index.js) and paste it into the code editor field
+1. Copy the code from [level-0/function/index.mjs](https://github.com/bespinian/serverless-workshop/blob/main/level-0/function/index.mjs) and paste it into the code editor field
 1. In the `Configuration` tab under `Environment variables`, set a variable called `NAME` to the name of a person you like
 1. In the `Test` tab, press the `Test` button and create a test event called `test`
 1. Press the `Test` button again to run the test
@@ -120,7 +120,7 @@ To authenticate your CLI, you first need to create an access key by performing t
 1. Create a deployment package for your function:
 
    ```shell
-   zip -j function.zip level-0/function/index.js
+   zip -j function.zip level-0/function/index.mjs
    ```
 
 1. Find out your Account ID by clicking your user name in the top-right corner. Then set it as a variable in your shell.
@@ -284,7 +284,7 @@ To reach level 1, you'll need to learn about the following topics:
 
 ### Steps
 
-1. In the Lambda GUI of your function, copy the code from [level-1/function/index.js](https://github.com/bespinian/serverless-workshop/blob/main/level-1/function/index.js) and paste it over the existing code in the editor field
+1. In the Lambda GUI of your function, copy the code from [level-1/function/index.mjs](https://github.com/bespinian/serverless-workshop/blob/main/level-1/function/index.mjs) and paste it over the existing code in the editor field
 1. In the `Test` tab, press the `Test` button and create a test event called `bob`
 1. Paste the following JSON object to the editor field
 
@@ -323,7 +323,7 @@ To reach level 1, you'll need to learn about the following topics:
 1. Create a deployment package for your new function:
 
    ```shell
-   zip -j function.zip level-1/function/index.js
+   zip -j function.zip level-1/function/index.mjs
    ```
 
 1. Update the function with the new code:
@@ -1099,7 +1099,7 @@ To reach level 7 you need to know how to
 1. Inspect the example function, the service mocks and the tests:
 
    ```shell
-   cat index.js
+   cat index.mjs
    cat index.test.js
    ```
 
@@ -1120,8 +1120,8 @@ To reach level 7 you need to know how to
 1. Inspect the express API and the function code
 
    ```shell
-   cat api.js
-   cat index.js
+   cat api.mjs
+   cat index.mjs
    ```
 
 1. Run the example locally as an express API:

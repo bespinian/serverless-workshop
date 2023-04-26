@@ -1,13 +1,14 @@
 const AWSXRay = require("aws-xray-sdk-core");
 const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
 
-exports.handler = async (event) => {
-  const tableSuffix = process.env.JOKE_TABLE_SUFFIX
-    ? process.env.JOKE_TABLE_SUFFIX
-    : "";
+const tableSuffix = process.env.JOKE_TABLE_SUFFIX
+  ? process.env.JOKE_TABLE_SUFFIX
+  : "";
 
-  const ddb = AWSXRay.captureAWSv3Client(new DynamoDBClient());
+// share the db connection between invocations
+const ddb = AWSXRay.captureAWSv3Client(new DynamoDBClient());
 
+export const handler = async (event) => {
   let jokeID = event.jokeID;
   if (event.body) {
     const buff = Buffer.from(event.body, "base64");
