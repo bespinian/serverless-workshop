@@ -30,7 +30,7 @@ export const handler = async (event, context) => {
     Key: { ID: { N: jokeID } },
   });
 
-  responsePromise = ddb.send(cmd);
+  const responsePromise = ddb.send(cmd);
 
   try {
     response = await Promise.race([timeoutPromise, responsePromise]);
