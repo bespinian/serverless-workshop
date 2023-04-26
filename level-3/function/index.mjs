@@ -33,7 +33,7 @@ export const handler = async (event, context) => {
   const responsePromise = ddb.send(cmd);
 
   try {
-    response = await Promise.race([timeoutPromise, responsePromise]);
+    const response = await Promise.race([timeoutPromise, responsePromise]);
     console.log(
       `Remaining time after db query is ${context.getRemainingTimeInMillis()}ms.`
     );
