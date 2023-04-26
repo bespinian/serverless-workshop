@@ -347,7 +347,7 @@ To reach level 1, you'll need to learn about the following topics:
 1. Inspect the log events of the log stream. You might have to escape some characters in the value passed in `--log-stream-name` e.g. `$LATEST` should be `\$LATEST`
 
    ```shell
-   aws logs get-log-events --log-group-name "/aws/lambda/my-function-cli-${AWSUSER}" --log-stream-name=<name of latest log stream>
+   aws logs get-log-events --log-group-name "/aws/lambda/my-function-cli-${AWSUSER}" --log-stream-name='<name of latest log stream>'
    ```
 
 </details>
@@ -394,7 +394,7 @@ To reach level 1, you'll need to learn about the following topics:
 1. Inspect the log events of the log stream:
 
    ```shell
-   aws logs get-log-events --log-group-name "/aws/lambda/my-function-tf-${TF_VAR_aws_user}" --log-stream-name=<name of latest log stream>
+   aws logs get-log-events --log-group-name "/aws/lambda/my-function-tf-${TF_VAR_aws_user}" --log-stream-name='<name of latest log stream>'
    ```
 
 1. Navigate back to the workshop repo
