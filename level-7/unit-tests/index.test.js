@@ -1,6 +1,6 @@
-const { mockClient } = require("aws-sdk-client-mock");
-const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
-const handler = require("./index.js").handler;
+import { mockClient } from "aws-sdk-client-mock";
+import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { handler } from "./index.js";
 
 const ddbMock = mockClient(DynamoDBClient);
 

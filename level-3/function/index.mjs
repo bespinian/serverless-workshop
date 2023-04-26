@@ -1,5 +1,5 @@
-const AWSXRay = require("aws-xray-sdk-core");
-const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
+import AWSXRay from "aws-xray-sdk-core";
+import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 
 export const handler = async (event, context) => {
   const TIMEOUT_GRACE_PERIOD_IN_MILLIS = 980;
