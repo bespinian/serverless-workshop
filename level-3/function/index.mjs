@@ -14,8 +14,8 @@ export const handler = async (event, context) => {
   const timeoutPromise = new Promise((_, reject) =>
     setTimeout(
       () => reject(new Error("Timeout")),
-      context.getRemainingTimeInMillis() - TIMEOUT_GRACE_PERIOD_IN_MILLIS
-    )
+      context.getRemainingTimeInMillis() - TIMEOUT_GRACE_PERIOD_IN_MILLIS,
+    ),
   );
 
   let jokeID = event.jokeID;
@@ -35,7 +35,7 @@ export const handler = async (event, context) => {
   try {
     const response = await Promise.race([timeoutPromise, responsePromise]);
     console.log(
-      `Remaining time after db query is ${context.getRemainingTimeInMillis()}ms.`
+      `Remaining time after db query is ${context.getRemainingTimeInMillis()}ms.`,
     );
 
     return response.Item;
