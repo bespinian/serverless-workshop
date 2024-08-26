@@ -1133,7 +1133,7 @@ To reach level 7 you need to know how to
 1. Make a request to the API in a new terminal:
 
    ```shell
-   curl -X GET http://localhost:3000 -H 'Content-Type:application/json' -d '{ "name":"Bob" }'
+   curl 'http://localhost:3000?name=alice'
    ```
 
 1. Package your function
