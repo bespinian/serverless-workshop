@@ -1045,8 +1045,14 @@ Furthermore, you need to have valid credentials for your AWS user set up in your
 1. Initialize the Terraform module
 
    ```shell
-   terraform -chdir=my-tf-module init
+   terraform init
    ```
+
+1. Navigate back to the workshop repo
+
+  ```shell
+  popd
+  ```
 
 1. Set your AWS user name as an environment variable for Terraform
 
@@ -1057,9 +1063,9 @@ Furthermore, you need to have valid credentials for your AWS user set up in your
 1. Install the functions dependencies
 
    ```shell
-   cd my-tf-module/function
+   pushd my-tf-module/function
    npm install
-   cd ../..
+   popd
    ```
 
 1. Navigate to your Terraform module
@@ -1071,13 +1077,14 @@ Furthermore, you need to have valid credentials for your AWS user set up in your
 1. Apply the Terraform module
 
    ```shell
-   terraform -chdir=my-tf-module apply
+   terraform apply
    ```
 
 1. Invoke the function with a test event:
 
    ```shell
    aws lambda invoke --function-name "my-function-tf-${TF_VAR_aws_user}" --cli-binary-format raw-in-base64-out --payload '{ "jokeID": "1" }' output.json --log-type Tail
+   popd
    ```
 
 ## Level 7 - Testing ... duh!
