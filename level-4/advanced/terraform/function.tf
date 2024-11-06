@@ -6,6 +6,12 @@ resource "aws_lambda_function" "my_function" {
   runtime = "nodejs18.x"
   handler = "index.handler"
 
+  environment {
+    variables = {
+      JOKE_TABLE_SUFFIX = "-${var.aws_user}"
+    }
+  }
+
   tracing_config {
     mode = "Active"
   }
