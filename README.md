@@ -661,7 +661,7 @@ You will notice the following points:
 1. Copy the Terraform module and the function code from level 3
 
    ```shell
-   cp -r level-3/advanced/terraform my-tf-module
+   cp level-3/advanced/terraform/* my-tf-module
    cp -r level-3/function my-tf-module
    ```
 
