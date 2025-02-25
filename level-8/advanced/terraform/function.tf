@@ -3,7 +3,7 @@ resource "aws_lambda_function" "my_function" {
 
   filename = data.archive_file.my_function.output_path
 
-  runtime = "nodejs18.x"
+  runtime = "nodejs22.x"
   handler = "index.handler"
 
   environment {

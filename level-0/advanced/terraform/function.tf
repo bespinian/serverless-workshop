@@ -3,7 +3,7 @@ resource "aws_lambda_function" "my_function" {
 
   filename = "${path.module}/function.zip"
 
-  runtime = "nodejs18.x"
+  runtime = "nodejs22.x"
   handler = "index.handler"
 
   environment {

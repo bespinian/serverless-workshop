@@ -3,7 +3,7 @@ resource "aws_lambda_function" "sender" {
 
   filename = data.archive_file.functions.output_path
 
-  runtime = "nodejs18.x"
+  runtime = "nodejs22.x"
   handler = "index.senderHandler"
 
   tracing_config {
