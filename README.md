@@ -66,9 +66,6 @@ Work through the following steps to expose your function on the Internet via the
 1. Select `HTTP API` as the API Type
 1. Select `Open`, in Security
 1. Click `Add`
-1. Click on the created API and visit the `Integrations` tab
-1. Click the `ANY` integration and hit the `Manage integration` button
-1. Click `Edit` and expand the `Advanced settings`. In there, choose the "Payload format version" `2.0` and hit the `Save` button
 1. You can now close this tab to go back to your function. Changing the integration format was necessary because our function returns the newer and simpler version `2.0` format.
 1. You should now see your newly created Trigger and the URL to access it.
    Click the link to see the response in your browser.
