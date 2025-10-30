@@ -42,6 +42,7 @@ Work through the following steps:
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges
 1. Click `Create function`
 1. Copy the code from [level-0/function/index.mjs](https://github.com/bespinian/serverless-workshop/blob/main/level-0/function/index.mjs) and paste it into the code editor field
+1. Click the "Deploy" button
 1. In the `Configuration` tab under `Environment variables`, set a variable called `NAME` to the name of a person you like
 1. In the `Test` tab, press the `Test` button and create a test event called `test`
 1. Press the `Test` button again to run the test
