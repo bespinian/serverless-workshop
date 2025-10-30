@@ -10,7 +10,7 @@ At the start of the course, take care of the following tasks:
 
 ### Ensure Node.js and npm are installed
 
-Ensure that you have Node.js runtime version 18.x or newer installed on your machine. If you need to install it, follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, type `npm` in a shell, to check that it is available.
+Ensure that you have Node.js runtime version 22.x or newer installed on your machine. If you need to install it, follow [the instructions on the Node.js site](https://nodejs.org/). Furthermore, you will also need the `npm` CLI. After the Node.js installation, type `npm` in a shell, to check that it is available.
 
 In case you cannot or do not want to install Node.js and npm, you can also run the commands via a container. For example, using Docker:
 
@@ -38,7 +38,7 @@ Work through the following steps:
 1. Choose **Europe (Frankfurt) eu-central-1** as the region in the top-right corner. All resources you create should be created in that region.
 1. Click on `Create function`
 1. Choose `my-function-AWSUSER` as the function name, replacing `AWSUSER` with your user name
-1. Choose `Node.js 18.x` as the runtime
+1. Choose `Node.js 22.x` as the runtime
 1. Open the section `Change default execution role` and note that the UI automatically creates an execution role behind the scenes, granting the function certain privileges
 1. Click `Create function`
 1. Copy the code from [level-0/function/index.mjs](https://github.com/bespinian/serverless-workshop/blob/main/level-0/function/index.mjs) and paste it into the code editor field
