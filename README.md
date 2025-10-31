@@ -868,9 +868,10 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 1. Create a deployment package for your new functions:
 
    ```shell
-   cd level-5/function
+   pushd level-5/function
    npm install
    zip -r function.zip ./*
+   popd
    ```
 
 1. Create two new roles:
@@ -885,9 +886,9 @@ To reach level 5, you'll need to learn how to decouple multiple functions asynch
 
    ```shell
    export SENDER_ROLE_ARN=$(aws iam get-role --role-name "sender-exec-cli-${AWSUSER}" --query Role.Arn --output text)
-   aws lambda create-function --function-name "sender-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.senderHandler --runtime nodejs22.x --role "$SENDER_ROLE_ARN"
+   aws lambda create-function --function-name "sender-cli-${AWSUSER}" --zip-file fileb://level-5/function.zip --handler index.senderHandler --runtime nodejs22.x --role "$SENDER_ROLE_ARN"
    export RECIPIENT_ROLE_ARN=$(aws iam get-role --role-name "recipient-exec-cli-${AWSUSER}" --query Role.Arn --output text)
-   aws lambda create-function --function-name "recipient-cli-${AWSUSER}" --zip-file fileb://function.zip --handler index.recipientHandler --runtime nodejs22.x --role "$RECIPIENT_ROLE_ARN"
+   aws lambda create-function --function-name "recipient-cli-${AWSUSER}" --zip-file fileb://level-5/function.zip --handler index.recipientHandler --runtime nodejs22.x --role "$RECIPIENT_ROLE_ARN"
    ```
 
 1. Create a new message queue
